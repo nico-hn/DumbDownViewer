@@ -14,4 +14,14 @@ describe DumbDirView do
     expect(filenames).to eq(%w(README index.html))
     expect(sub_dirnames).to eq(%w(can_fly cannot_fly))
   end
+
+  describe DumbDirView::FileNode do
+    it '#extention returns file extention' do
+      tree = DumbDirView.build_node_tree('spec/data')
+      files = tree.files
+
+      expect(files[0].extention).to eq('')
+      expect(files[1].extention).to eq('html')
+    end
+  end
 end

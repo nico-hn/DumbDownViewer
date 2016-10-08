@@ -51,5 +51,16 @@ module DumbDirView
   end
 
   class FileNode < Node
+    attr_reader :extention
+    def setup
+      extract_extention
+    end
+
+    private
+
+    def extract_extention
+      m = /\.([^.]+)\Z/.match(@name)
+      @extention = m ? m[1] : ''
+    end
   end
 end
