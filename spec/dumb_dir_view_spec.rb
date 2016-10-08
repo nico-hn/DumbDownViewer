@@ -15,6 +15,28 @@ describe DumbDirView do
     expect(sub_dirnames).to eq(%w(can_fly cannot_fly))
   end
 
+  describe DumbDirView::Node do
+    it '#depth is set to 0 for the root node' do
+      tree = DumbDirView.build_node_tree('spec/data')
+
+      expect(tree.depth).to eq(0)
+    end
+
+    it '#depth is set to 1 for nodes in the second level' do
+      tree = DumbDirView.build_node_tree('spec/data')
+
+      expect(tree.directories[0].depth).to eq(1)
+      expect(tree.files[0].depth).to eq(1)
+    end
+
+    it '#depth is set to 2 for nodes in the third level' do
+      tree = DumbDirView.build_node_tree('spec/data')
+
+      expect(tree.directories[0].directories[0].depth).to eq(2)
+      expect(tree.directories[0].files[0].depth).to eq(2)
+    end
+  end
+
   describe DumbDirView::FileNode do
     it '#extention returns file extention' do
       tree = DumbDirView.build_node_tree('spec/data')

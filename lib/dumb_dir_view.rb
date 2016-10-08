@@ -14,15 +14,16 @@ module DumbDirView
 
   def self.build_node_tree(dir)
     dirname, filename = File.split(dir)
-    DirNode.new(dirname, filename)
+    DirNode.new(dirname, filename, 0)
   end
 
   class Node
-    attr_reader :directory, :name
+    attr_reader :directory, :name, :depth
 
-    def initialize(pwd, name)
+    def initialize(pwd, name, depth)
       @directory = pwd
       @name = name
+      @depth = depth
       @name_with_path = pwd.empty? ? @name : File.join(pwd, name)
       setup
     end
@@ -44,8 +45,9 @@ module DumbDirView
 
     def collect_entries
       dirs, files = DumbDirView.collect_directories_and_files(@name_with_path)
-      @directories = dirs.map {|dir| DirNode.new(@name_with_path, dir) }
-      @files = files.map {|file| FileNode.new(@name_with_path, file) }
+      depth = @depth + 1
+      @directories = dirs.map {|dir| DirNode.new(@name_with_path, dir, depth) }
+      @files = files.map {|file| FileNode.new(@name_with_path, file, depth) }
       @sub_nodes = @files + @directories
     end
   end
