@@ -18,7 +18,7 @@ module DumbDirView
   end
 
   class Node
-    attr_reader :directory, :name, :depth
+    attr_reader :sub_nodes, :directory, :name, :depth
 
     def initialize(pwd, name, depth)
       @directory = pwd
@@ -37,7 +37,7 @@ module DumbDirView
   end
 
   class DirNode < Node
-    attr_reader :sub_nodes, :directories, :files
+    attr_reader :directories, :files
 
     def setup
       collect_entries
@@ -56,6 +56,7 @@ module DumbDirView
     attr_reader :extention
     def setup
       extract_extention
+      @sub_nodes = [].freeze
     end
 
     private
