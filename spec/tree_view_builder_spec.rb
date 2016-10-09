@@ -6,6 +6,27 @@ describe DumbDownViewer do
   describe DumbDownViewer::TreeViewBuilder do
     before do
       @tree = DumbDownViewer.build_node_tree('spec/data')
+
+      @expected_plain_text = <<TABLE
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   │   └─ sparrow.txt
+│   └─ [cannot_fly]
+│        ├─ ostrich.jpg
+│        ├─ ostrich.txt
+│        ├─ penguin.jpg
+│        └─ penguin.txt
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     │   └─ bat.txt
+     └─ [cannot_fly]
+          └─ elephant.txt
+TABLE
     end
 
     it '#setup determines the depth of tree' do
@@ -29,34 +50,13 @@ describe DumbDownViewer do
       expect(builder.tree_table[-2][-2].name).to eq('cannot_fly')
     end
 
-    it '.format_table returns a directory tree in plain text' do
-      expected_result = <<TABLE
-[spec/data]
-├─ README
-├─ index.html
-├─ [aves]
-│   ├─ index.html
-│   ├─ [can_fly]
-│   │   └─ sparrow.txt
-│   └─ [cannot_fly]
-│        ├─ ostrich.jpg
-│        ├─ ostrich.txt
-│        ├─ penguin.jpg
-│        └─ penguin.txt
-└─ [mammalia]
-     ├─ index.html
-     ├─ [can_fly]
-     │   └─ bat.txt
-     └─ [cannot_fly]
-          └─ elephant.txt
-TABLE
-
+    it 'PlainTextFormat.format_table returns a directory tree in plain text' do
       builder = DumbDownViewer::TreeViewBuilder.create(@tree)
       table = builder.tree_table
 
       result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(table)
 
-      expect(result).to eq(expected_result)
+      expect(result).to eq(@expected_plain_text)
     end
   end
 end
