@@ -29,7 +29,7 @@ module DumbDownViewer
         end
 
         update_root_directory_name(tree_table[0][0], t)
-        fill_spaces(t.transpose).map {|r| r.join }.join($/) + $/
+        table_to_output_format(t.transpose)
       end
 
       def draw_lines(fr, sr, f_node, i)
@@ -61,6 +61,10 @@ module DumbDownViewer
         if root.directory and not root.directory.empty?
           table[0][0] = "[#{File.join(root.directory, root.name)}]"
         end
+      end
+
+      def table_to_output_format(table)
+        fill_spaces(table).map {|r| r.join }.join($/) + $/
       end
     end
 
