@@ -32,14 +32,7 @@ module DumbDownViewer
         t[0][0] = "[#{File.join(root.directory, root.name)}]"
       end
 
-      t = t.transpose.map do |row|
-        (row.size - 1).downto(0) do |i|
-          if row[i + 1] and row[i].nil?
-            row[i] = @spacer
-          end
-        end
-        row
-      end
+      t = fill_spaces(t.transpose)
 
       t.map {|r| r.join }.join($/) + $/
     end
@@ -60,6 +53,17 @@ module DumbDownViewer
         else
           fr[j] = @v_line
         end
+      end
+    end
+
+    def self.fill_spaces(table)
+      table.map do |row|
+        (row.size - 1).downto(0) do |i|
+          if row[i + 1] and row[i].nil?
+            row[i] = @spacer
+          end
+        end
+        row
       end
     end
 
