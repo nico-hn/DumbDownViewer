@@ -9,7 +9,8 @@ describe DumbDownViewer do
     end
 
     it '#setup determines the depth of tree' do
-      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
+      builder = DumbDownViewer::TreeViewBuilder.new
+      builder.determine_depth(@tree)
 
       expect(builder.instance_eval('@tree_depth')).to eq(3)
     end
