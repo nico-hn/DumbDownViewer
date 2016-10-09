@@ -1,21 +1,21 @@
 require "spec_helper"
-require "dumb_dir_view"
-require 'dumb_dir_view/visitor'
+require "dumb_down_viewer"
+require 'dumb_down_viewer/visitor'
 
-describe DumbDirView do
-  describe DumbDirView::Visitor do
+describe DumbDownViewer do
+  describe DumbDownViewer::Visitor do
     it 'takes a block and applies it to each node' do
-      tree = DumbDirView.build_node_tree('spec/data')
+      tree = DumbDownViewer.build_node_tree('spec/data')
       tree_depth = 0
-      depth_checker = DumbDirView::Visitor.new do |node, memo|
+      depth_checker = DumbDownViewer::Visitor.new do |node, memo|
         tree_depth = node.depth > memo ? node.depth : memo
       end
 
       tree.accept(depth_checker, 0)
 
       image_files = []
-      image_file_collector = DumbDirView::Visitor.new do |node, memo|
-         if node.kind_of? DumbDirView::FileNode and node.extention == 'jpg'
+      image_file_collector = DumbDownViewer::Visitor.new do |node, memo|
+         if node.kind_of? DumbDownViewer::FileNode and node.extention == 'jpg'
            image_files.push node.name
          end
       end

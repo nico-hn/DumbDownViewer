@@ -1,3 +1,3 @@
-module DumbDirView
+module DumbDownViewer
   VERSION = "0.1.0"
 end

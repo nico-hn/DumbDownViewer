@@ -1,7 +1,7 @@
-require 'dumb_dir_view'
-require 'dumb_dir_view/visitor'
+require 'dumb_down_viewer'
+require 'dumb_down_viewer/visitor'
 
-module DumbDirView
+module DumbDownViewer
   class TreeViewBuilder < Visitor
     attr_reader :tree_table
 

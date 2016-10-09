@@ -1,9 +1,9 @@
-require 'dumb_dir_view/version'
+require 'dumb_down_viewer/version'
 require 'fileutils'
 require 'find'
 require 'nokogiri'
 
-module DumbDirView
+module DumbDownViewer
   def self.collect_directories_and_files(path)
     entries = Dir.entries(path) - ['.', '..']
     entries.partition do |entry|
@@ -48,7 +48,7 @@ module DumbDirView
     end
 
     def collect_entries
-      dirs, files = DumbDirView.collect_directories_and_files(@name_with_path)
+      dirs, files = DumbDownViewer.collect_directories_and_files(@name_with_path)
       depth = @depth + 1
       @directories = dirs.map {|dir| DirNode.new(@name_with_path, dir, depth) }
       @files = files.map {|file| FileNode.new(@name_with_path, file, depth) }

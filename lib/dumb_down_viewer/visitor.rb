@@ -1,6 +1,6 @@
-require 'dumb_dir_view'
+require 'dumb_down_viewer'
 
-module DumbDirView
+module DumbDownViewer
   class Visitor
     attr_accessor
     def initialize(*args, &memo_update)
