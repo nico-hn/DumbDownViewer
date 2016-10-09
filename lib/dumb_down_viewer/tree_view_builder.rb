@@ -16,8 +16,8 @@ module DumbDownViewer
       branch: '├─ ',
       corner: '└─ ' }
 
-    def self.format_table(table)
-      t = table.transpose
+    def self.format_table(tree_table)
+      t = tree_table.transpose
       t.each_cons(2) do |fr, sr|
         fr.each_with_index do |f, i|
           next unless f.kind_of? Node
@@ -25,7 +25,7 @@ module DumbDownViewer
         end
       end
 
-      update_root_directory_name(table[0][0], t)
+      update_root_directory_name(tree_table[0][0], t)
       fill_spaces(t.transpose).map {|r| r.join }.join($/) + $/
     end
 
