@@ -9,19 +9,19 @@ describe DumbDownViewer do
     end
 
     it '#setup determines the depth of tree' do
-      builder = DumbDownViewer::TreeViewBuilder.new(@tree)
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
 
       expect(builder.instance_eval('@tree_depth')).to eq(3)
     end
 
     it "#new_table_row returns an array whose size is the depth of tree + 1" do
-      builder = DumbDownViewer::TreeViewBuilder.new(@tree)
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
       table_row = builder.new_table_row
       expect(table_row).to eq([nil, nil, nil, nil])
     end
 
     it '#tree_table has rows and each of them corresponds to a file or directory entry in the tree' do
-      builder = DumbDownViewer::TreeViewBuilder.new(@tree)
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
 
       expect(builder.tree_table.size).to eq(18)
       expect(builder.tree_table[-1][-1].name).to eq('elephant.txt')
@@ -50,7 +50,7 @@ describe DumbDownViewer do
           └─ elephant.txt
 TABLE
 
-      builder = DumbDownViewer::TreeViewBuilder.new(@tree)
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
       table = builder.tree_table
 
       result = DumbDownViewer::TreeViewBuilder.format_table(table)

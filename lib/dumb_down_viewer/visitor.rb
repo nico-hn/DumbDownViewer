@@ -3,9 +3,13 @@ require 'dumb_down_viewer'
 module DumbDownViewer
   class Visitor
     attr_accessor
-    def initialize(*args, &memo_update)
+
+    def self.create(*args, &memo_update)
+      new(&memo_update).tap {|visitor| visitor.setup(*args) }
+    end
+
+    def initialize(&memo_update)
       @memo_update = memo_update
-      setup(*args)
     end
 
     def setup(*args)
