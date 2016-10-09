@@ -74,12 +74,8 @@ module DumbDownViewer
     def visit_dir_node(node, memo)
       add_current_node_row(node)
 
-      node.files.sort_by {|f| f.name }.each do |file|
-        file.accept(self, memo)
-      end
-
-      node.directories.sort_by {|d| d.name }.each do |dir|
-        dir.accept(self, memo)
+      [node.files, node.directories].each do |nodes|
+        nodes.sort_by {|n| n.name }.each {|n| n.accept(self, memo) }
       end
     end
 
