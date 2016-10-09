@@ -54,7 +54,7 @@ TABLE
       builder = DumbDownViewer::TreeViewBuilder.create(@tree)
       table = builder.tree_table
 
-      result = DumbDownViewer::TreeViewBuilder.format_table(table)
+      result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(table)
 
       expect(result).to eq(expected_result)
     end

@@ -5,18 +5,21 @@ module DumbDownViewer
   class TreeViewBuilder < Visitor
     attr_reader :tree_table
 
-    class << self
+    class PlainTextFormat
       attr_accessor :line
-    end
 
-    @line = {
+    LINE_PATTERN = {
       spacer: '     ',
       h_line: '── ',
       v_line: '│   ',
       branch: '├─ ',
-      corner: '└─ ' }
+        corner: '└─ ' }
 
-    def self.format_table(tree_table)
+      def initialize(line_pattern=LINE_PATTERN)
+        @line = line_pattern
+      end
+
+    def format_table(tree_table)
       t = tree_table.transpose
       t.each_cons(2) do |fr, sr|
         fr.each_with_index do |f, i|
@@ -29,7 +32,7 @@ module DumbDownViewer
       fill_spaces(t.transpose).map {|r| r.join }.join($/) + $/
     end
 
-    def self.draw_lines(fr, sr, f_node, i)
+    def draw_lines(fr, sr, f_node, i)
       sub_count = f_node.sub_nodes.size
       j = i
       while sub_count > 0
@@ -45,7 +48,7 @@ module DumbDownViewer
       fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
     end
 
-    def self.fill_spaces(table)
+    def fill_spaces(table)
       table.map do |row|
         (row.size - 1).downto(0) do |i|
           row[i] = @line[:spacer] if row[i + 1] and row[i].nil?
@@ -54,10 +57,11 @@ module DumbDownViewer
       end
     end
 
-    def self.update_root_directory_name(root, table)
+    def update_root_directory_name(root, table)
       if root.directory and not root.directory.empty?
         table[0][0] = "[#{File.join(root.directory, root.name)}]"
       end
+    end
     end
 
     def setup(tree)
