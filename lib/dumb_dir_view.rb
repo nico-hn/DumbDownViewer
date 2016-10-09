@@ -34,6 +34,10 @@ module DumbDirView
     def accept(visitor, memo)
       visitor.visit(self, memo)
     end
+
+    def to_s
+      @name
+    end
   end
 
   class DirNode < Node
