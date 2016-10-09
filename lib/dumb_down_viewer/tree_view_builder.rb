@@ -34,17 +34,14 @@ module DumbDownViewer
       while sub_count > 0
         j += 1
         s_node = sr[j]
-        if s_node and sub_count == 1
-          fr[j] = @corner
-          fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
-          sub_count -= 1
-        elsif s_node
-          fr[j] = @branch
+        if s_node
+          fr[j] = sub_count == 1 ? @corner : @branch
           sub_count -= 1
         else
           fr[j] = @v_line
         end
       end
+      fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
     end
 
     def self.fill_spaces(table)
