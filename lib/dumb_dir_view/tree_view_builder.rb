@@ -5,6 +5,60 @@ module DumbDirView
   class TreeViewBuilder < Visitor
     attr_reader :tree_table
 
+    class << self
+      attr_accessor :h_line, :v_line, :branch, :corner
+    end
+
+    @spacer = '     '
+    @h_line = '── '
+    @v_line = '│   '
+    @branch = '├─ '
+    @corner = '└─ '
+
+    def self.format_table(table)
+      t = table.transpose
+      t.each_cons(2) do |fr, sr|
+        f_node = nil
+        fr.each_with_index do |f, i|
+          next unless f.kind_of? Node
+          f_node = f
+          sub_count = f_node.sub_nodes.size
+          j = i
+          while sub_count > 0
+            j += 1
+            s_node = sr[j]
+            if s_node and sub_count == 1
+              fr[j] = @corner
+              fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
+              sub_count -= 1
+            elsif s_node
+              fr[j] = @branch
+              sub_count -= 1
+            else
+              fr[j] = @v_line
+            end
+          end
+        end
+      end
+
+      root = table[0][0]
+
+      if root.directory and not root.directory.empty?
+        t[0][0] = "[#{File.join(root.directory, root.name)}]"
+      end
+
+      t = t.transpose.map do |row|
+        (row.size - 1).downto(0) do |i|
+          if row[i + 1] and row[i].nil?
+            row[i] = @spacer
+          end
+        end
+        row
+      end
+
+      t.map {|r| r.join }.join($/) + $/
+    end
+
     def setup(tree)
       @tree_table = []
       depth_checker = Visitor.new do |node, memo|
