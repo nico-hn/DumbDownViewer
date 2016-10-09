@@ -64,6 +64,10 @@ module DumbDownViewer
       end
     end
 
+    def format(formatter=PlainTextFormat.new)
+      formatter.format_table(@tree_table)
+    end
+
     def setup(tree)
       @tree_table = []
       determine_depth(tree)

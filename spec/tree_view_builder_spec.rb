@@ -50,6 +50,13 @@ TABLE
       expect(builder.tree_table[-2][-2].name).to eq('cannot_fly')
     end
 
+    it '#format returns a directory tree in plain text by default' do
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
+      result = builder.format
+
+      expect(result).to eq(@expected_plain_text)
+    end
+
     it 'PlainTextFormat.format_table returns a directory tree in plain text' do
       builder = DumbDownViewer::TreeViewBuilder.create(@tree)
       table = builder.tree_table
