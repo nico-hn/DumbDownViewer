@@ -18,7 +18,6 @@ module DumbDownViewer
     def self.format_table(table)
       t = table.transpose
       t.each_cons(2) do |fr, sr|
-        f_node = nil
         fr.each_with_index do |f, i|
           next unless f.kind_of? Node
           draw_lines(fr, sr, f, i)
