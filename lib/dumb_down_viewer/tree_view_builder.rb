@@ -24,12 +24,7 @@ module DumbDownViewer
         end
       end
 
-      root = table[0][0]
-
-      if root.directory and not root.directory.empty?
-        t[0][0] = "[#{File.join(root.directory, root.name)}]"
-      end
-
+      update_root_directory_name(table[0][0], t)
       fill_spaces(t.transpose).map {|r| r.join }.join($/) + $/
     end
 
@@ -60,6 +55,12 @@ module DumbDownViewer
           end
         end
         row
+      end
+    end
+
+    def self.update_root_directory_name(root, table)
+      if root.directory and not root.directory.empty?
+        table[0][0] = "[#{File.join(root.directory, root.name)}]"
       end
     end
 
