@@ -19,6 +19,15 @@ describe DumbDirView do
       table_row = builder.new_table_row
       expect(table_row).to eq([nil, nil, nil, nil])
     end
+
+    it '#tree_table has rows and each of them corresponds to a file or directory entry in the tree' do
+      builder = DumbDirView::TreeViewBuilder.new(@tree)
+      @tree.accept(builder, nil)
+
+      expect(builder.tree_table.size).to eq(18)
+      expect(builder.tree_table[-1][-1].name).to eq('elephant.txt')
+      expect(builder.tree_table[-2][-2].name).to eq('cannot_fly')
+    end
   end
 end
 
