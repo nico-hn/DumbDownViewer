@@ -66,6 +66,7 @@ module DumbDownViewer
         @tree_depth = node.depth > memo ? node.depth : memo
       end
       tree.accept(depth_checker, 0)
+      tree.accept(self, nil)
     end
 
     def new_table_row

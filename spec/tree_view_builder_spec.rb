@@ -22,7 +22,6 @@ describe DumbDownViewer do
 
     it '#tree_table has rows and each of them corresponds to a file or directory entry in the tree' do
       builder = DumbDownViewer::TreeViewBuilder.new(@tree)
-      @tree.accept(builder, nil)
 
       expect(builder.tree_table.size).to eq(18)
       expect(builder.tree_table[-1][-1].name).to eq('elephant.txt')
@@ -52,7 +51,6 @@ describe DumbDownViewer do
 TABLE
 
       builder = DumbDownViewer::TreeViewBuilder.new(@tree)
-      @tree.accept(builder, nil)
       table = builder.tree_table
 
       result = DumbDownViewer::TreeViewBuilder.format_table(table)
