@@ -25,16 +25,13 @@ module DumbDownViewer
         end
       end
 
-
       root = table[0][0]
 
       if root.directory and not root.directory.empty?
         t[0][0] = "[#{File.join(root.directory, root.name)}]"
       end
 
-      t = fill_spaces(t.transpose)
-
-      t.map {|r| r.join }.join($/) + $/
+      fill_spaces(t.transpose).map {|r| r.join }.join($/) + $/
     end
 
     def self.draw_lines(fr, sr, f_node, i)
