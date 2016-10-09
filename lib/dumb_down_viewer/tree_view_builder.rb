@@ -6,14 +6,15 @@ module DumbDownViewer
     attr_reader :tree_table
 
     class << self
-      attr_accessor :h_line, :v_line, :branch, :corner
+      attr_accessor :line
     end
 
-    @spacer = '     '
-    @h_line = '── '
-    @v_line = '│   '
-    @branch = '├─ '
-    @corner = '└─ '
+    @line = {
+      spacer: '     ',
+      h_line: '── ',
+      v_line: '│   ',
+      branch: '├─ ',
+      corner: '└─ ' }
 
     def self.format_table(table)
       t = table.transpose
@@ -35,10 +36,10 @@ module DumbDownViewer
         j += 1
         s_node = sr[j]
         if s_node
-          fr[j] = sub_count == 1 ? @corner : @branch
+          fr[j] = sub_count == 1 ? @line[:corner] : @line[:branch]
           sub_count -= 1
         else
-          fr[j] = @v_line
+          fr[j] = @line[:v_line]
         end
       end
       fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
@@ -47,7 +48,7 @@ module DumbDownViewer
     def self.fill_spaces(table)
       table.map do |row|
         (row.size - 1).downto(0) do |i|
-          row[i] = @spacer if row[i + 1] and row[i].nil?
+          row[i] = @line[:spacer] if row[i + 1] and row[i].nil?
         end
         row
       end
