@@ -47,9 +47,7 @@ module DumbDownViewer
     def self.fill_spaces(table)
       table.map do |row|
         (row.size - 1).downto(0) do |i|
-          if row[i + 1] and row[i].nil?
-            row[i] = @spacer
-          end
+          row[i] = @spacer if row[i + 1] and row[i].nil?
         end
         row
       end
