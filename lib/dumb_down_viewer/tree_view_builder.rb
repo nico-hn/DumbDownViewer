@@ -21,7 +21,7 @@ module DumbDownViewer
         f_node = nil
         fr.each_with_index do |f, i|
           next unless f.kind_of? Node
-          draw_lines(fr, sr, f, i, f.sub_nodes.size)
+          draw_lines(fr, sr, f, i)
         end
       end
 
@@ -44,7 +44,8 @@ module DumbDownViewer
       t.map {|r| r.join }.join($/) + $/
     end
 
-    def self.draw_lines(fr, sr, f_node, i, sub_count)
+    def self.draw_lines(fr, sr, f_node, i)
+      sub_count = f_node.sub_nodes.size
       j = i
       while sub_count > 0
         j += 1
