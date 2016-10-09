@@ -21,25 +21,10 @@ module DumbDownViewer
         f_node = nil
         fr.each_with_index do |f, i|
           next unless f.kind_of? Node
-          f_node = f
-          sub_count = f_node.sub_nodes.size
-          j = i
-          while sub_count > 0
-            j += 1
-            s_node = sr[j]
-            if s_node and sub_count == 1
-              fr[j] = @corner
-              fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
-              sub_count -= 1
-            elsif s_node
-              fr[j] = @branch
-              sub_count -= 1
-            else
-              fr[j] = @v_line
-            end
-          end
+          draw_lines(fr, sr, f, i, f.sub_nodes.size)
         end
       end
+
 
       root = table[0][0]
 
@@ -57,6 +42,24 @@ module DumbDownViewer
       end
 
       t.map {|r| r.join }.join($/) + $/
+    end
+
+    def self.draw_lines(fr, sr, f_node, i, sub_count)
+      j = i
+      while sub_count > 0
+        j += 1
+        s_node = sr[j]
+        if s_node and sub_count == 1
+          fr[j] = @corner
+          fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
+          sub_count -= 1
+        elsif s_node
+          fr[j] = @branch
+          sub_count -= 1
+        else
+          fr[j] = @v_line
+        end
+      end
     end
 
     def setup(tree)
