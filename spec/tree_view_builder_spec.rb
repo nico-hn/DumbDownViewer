@@ -13,6 +13,12 @@ describe DumbDirView do
 
       expect(builder.instance_eval('@tree_depth')).to eq(3)
     end
+
+    it "#new_table_row returns an array whose size is the depth of tree + 1" do
+      builder = DumbDirView::TreeViewBuilder.new(@tree)
+      table_row = builder.new_table_row
+      expect(table_row).to eq([nil, nil, nil, nil])
+    end
   end
 end
 

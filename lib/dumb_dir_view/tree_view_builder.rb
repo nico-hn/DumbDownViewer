@@ -10,5 +10,9 @@ module DumbDirView
       end
       tree.accept(depth_checker, 0)
     end
+
+    def new_table_row
+      Array.new(@tree_depth + 1)
+    end
   end
 end
