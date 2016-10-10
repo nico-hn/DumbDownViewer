@@ -30,6 +30,7 @@ YAML
     def self.parse_command_line_options
       options = { style: :default, format: :default }
       OptionParser.new_with_yaml(OPTIONS) do |opt|
+        opt.version = DumbDownViewer::VERSION
         opt.inherit_ruby_options("E") # -E --encoding
 
         opt.on(:style) {|style| options[:style] = style.to_sym }
