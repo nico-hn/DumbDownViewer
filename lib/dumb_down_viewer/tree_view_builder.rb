@@ -1,6 +1,7 @@
 require 'dumb_down_viewer'
 require 'dumb_down_viewer/visitor'
 require 'csv'
+require 'yaml'
 
 module DumbDownViewer
   class TreeViewBuilder < Visitor
@@ -9,15 +10,17 @@ module DumbDownViewer
     class PlainTextFormat
       attr_accessor :line
 
-      LINE_PATTERN = {
-        spacer: '     ',
-        h_line: '── ',
-        v_line: '│   ',
-        branch: '├─ ',
-        corner: '└─ ' }
+      LINE_PATTERNS = YAML.load(<<YAML_DATA)
+:default:
+  :spacer: '     '
+  :h_line: '── '
+  :v_line: '│   '
+  :branch: '├─ '
+  :corner: '└─ '
+YAML_DATA
 
-      def initialize(line_pattern=LINE_PATTERN)
-        @line = line_pattern
+      def initialize(line_pattern=:default)
+        @line = LINE_PATTERNS[line_pattern]
       end
 
       def format_table(tree_table)
@@ -70,8 +73,8 @@ module DumbDownViewer
     end
 
     class TreeCSVFormat < PlainTextFormat
-      def initialize(line_pattern=LINE_PATTERN, col_sep=',')
-        @line = line_pattern
+      def initialize(line_pattern=:default, col_sep=',')
+        @line = LINE_PATTERNS[line_pattern]
         @col_sep = col_sep
       end
 
