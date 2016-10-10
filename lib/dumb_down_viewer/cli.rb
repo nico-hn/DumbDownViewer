@@ -21,6 +21,10 @@ format:
   short: "-f [format_name]"
   long: "--format [=format_name]"
   description: Choose the output format other than default from csv, tsv, tree_csv
+directories:
+  short: "-d"
+  long: "--directories-only"
+  description: "List directories only"
 YAML
 
     def self.parse_command_line_options
@@ -30,6 +34,7 @@ YAML
 
         opt.on(:style) {|style| options[:style] = style.to_sym }
         opt.on(:format) {|format| options[:format] = format.to_sym }
+        opt.on(:directories) {|directories| options[:directories] = true }
         opt.parse!
       end
       options
@@ -39,10 +44,16 @@ YAML
       options = parse_command_line_options
       col_sep = options[:format] == :csv ? ',' : "\t"
       tree = DumbDownViewer.build_node_tree(ARGV[0])
+      prune_files(tree) if options[:directories]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
       print formatter.format_table(builder.tree_table)
+    end
+
+    def self.prune_files(tree)
+      pruner = DumbDownViewer::TreePruner.create {|node| node.directory? }
+      pruner.visit(tree, nil)
     end
   end
 end
