@@ -52,7 +52,7 @@ module DumbDownViewer
     attr_reader :directories, :files
 
     def sub_nodes
-      @files + @directories
+      (@files + @directories).freeze
     end
 
     def collect_entries
@@ -72,7 +72,7 @@ module DumbDownViewer
     attr_reader :extention
     def setup
       extract_extention
-      @sub_nodes = []
+      @sub_nodes = [].freeze
     end
 
     private
