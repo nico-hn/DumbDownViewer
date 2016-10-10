@@ -216,5 +216,28 @@ CSV
 
       expect(result).to eq(@expected_csv)
     end
+
+    it 'TreePruner removes nodes that match given criteria' do
+      expected_result = <<TABLE
+[spec/data]
+├─ [aves]
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+│        ├─ ostrich.jpg
+│        └─ penguin.jpg
+└─ [mammalia]
+     ├─ [can_fly]
+     └─ [cannot_fly]
+TABLE
+
+      tree = DumbDownViewer.build_node_tree('spec/data')
+      pruner = DumbDownViewer::TreePruner.create {|node| node.kind_of? DumbDownViewer::DirNode or /\.jpg\Z/ =~ node.name }
+      pruner.visit(tree, nil)
+      builder = DumbDownViewer::TreeViewBuilder.create(tree)
+      table = builder.tree_table
+
+      result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(table)
+      expect(result).to eq(expected_result)
+    end
   end
 end

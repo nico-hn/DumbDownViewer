@@ -61,7 +61,7 @@ module DumbDownViewer
     attr_reader :extention
     def setup
       extract_extention
-      @sub_nodes = [].freeze
+      @sub_nodes = []
     end
 
     private

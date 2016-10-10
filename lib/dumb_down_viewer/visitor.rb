@@ -38,4 +38,18 @@ module DumbDownViewer
       end
     end
   end
+
+  class TreePruner < Visitor
+    def setup(keep=true)
+      criteria = @memo_update
+      delete_method = keep ? :keep_if : :delete_if
+      @memo_update = proc do |node, memo|
+        unless node.kind_of? FileNode
+          [node.sub_nodes, node.directories, node.files].each do |nodes|
+            nodes.send(delete_method) {|n| criteria.call(n) }
+          end
+        end
+      end
+    end
+  end
 end
