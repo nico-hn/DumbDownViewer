@@ -43,13 +43,16 @@ module DumbDownViewer
   class DirNode < Node
     attr_reader :directories, :files
 
+    def sub_nodes
+      @files + @directories
+    end
+
     def collect_entries
       dirs, files = DumbDownViewer.collect_directories_and_files(@name_with_path)
       depth = @depth + 1
       @directories = entry_nodes(dirs, DirNode, depth)
       @directories.each {|dir| dir.collect_entries }
       @files = entry_nodes(files, FileNode, depth)
-      @sub_nodes = @files + @directories
     end
 
     def entry_nodes(nodes, node_class, depth)
