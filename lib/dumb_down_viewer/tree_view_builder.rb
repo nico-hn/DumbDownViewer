@@ -29,6 +29,12 @@ module DumbDownViewer
   :v_line: '   '
   :branch: ' * '
   :corner: ' * '
+:zenkaku:
+  :spacer: '　　 '
+  :h_line: '── '
+  :v_line: '│　 '
+  :branch: '├─ '
+  :corner: '└─ '
 YAML_DATA
 
       def initialize(line_pattern=:default)
