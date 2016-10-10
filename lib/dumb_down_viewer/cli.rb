@@ -16,7 +16,7 @@ banner: "USAGE: #{File.basename($0)} [OPTION]... DIRECTORY"
 style:
   short: "-s [style_name]"
   long: "--style [=style_name]"
-  description: "Choose the style of output other than default from ascii_art, list, zenkaku"
+  description: "Choose the style of output other than default from ascii_art, list, zenkaku or tree"
 format:
   short: "-f [format_name]"
   long: "--format [=format_name]"

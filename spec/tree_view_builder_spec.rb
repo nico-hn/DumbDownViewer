@@ -92,6 +92,27 @@ TABLE
 　　 　　 └─ elephant.txt
 TABLE
 
+      @expected_tree_compatible = <<TABLE
+[spec/data]
+├── README
+├── index.html
+├── [aves]
+│   ├── index.html
+│   ├── [can_fly]
+│   │   └── sparrow.txt
+│   └── [cannot_fly]
+│       ├── ostrich.jpg
+│       ├── ostrich.txt
+│       ├── penguin.jpg
+│       └── penguin.txt
+└── [mammalia]
+    ├── index.html
+    ├── [can_fly]
+    │   └── bat.txt
+    └── [cannot_fly]
+        └── elephant.txt
+TABLE
+
       @expected_tree_csv = <<CSV
 [spec/data],,,
 ├─ ,README,,
@@ -207,6 +228,15 @@ CSV
       result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new(:zenkaku).format_table(table)
 
       expect(result).to eq(@expected_zenkaku)
+    end
+
+    it 'PlainTextFormat.format_table returns a directory tree in plain text -- tree' do
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
+      table = builder.tree_table
+
+      result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new(:tree).format_table(table)
+
+      expect(result).to eq(@expected_tree_compatible)
     end
 
     it 'TreeCSVFormat.format_table returns a directory tree in CSV format' do
