@@ -48,6 +48,27 @@ TABLE
 ,└─ ,[cannot_fly],
 ,,└─ ,elephant.txt
 CSV
+
+      @expected_csv = <<CSV
+data,,,
+,README,,
+,index.html,,
+,aves,,
+,,index.html,
+,,can_fly,
+,,,sparrow.txt
+,,cannot_fly,
+,,,ostrich.jpg
+,,,ostrich.txt
+,,,penguin.jpg
+,,,penguin.txt
+,mammalia,,
+,,index.html,
+,,can_fly,
+,,,bat.txt
+,,cannot_fly,
+,,,elephant.txt
+CSV
     end
 
     it '#setup determines the depth of tree' do
@@ -94,6 +115,15 @@ CSV
       result = DumbDownViewer::TreeViewBuilder::TreeCSVFormat.new.format_table(table)
 
       expect(result).to eq(@expected_tree_csv)
+    end
+
+    it 'CSVFormat.format_table returns a directory tree in CSV format' do
+      builder = DumbDownViewer::TreeViewBuilder.create(@tree)
+      table = builder.tree_table
+
+      result = DumbDownViewer::TreeViewBuilder::CSVFormat.new.format_table(table)
+
+      expect(result).to eq(@expected_csv)
     end
   end
 end

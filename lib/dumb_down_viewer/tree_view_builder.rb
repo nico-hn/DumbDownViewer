@@ -82,6 +82,19 @@ module DumbDownViewer
       end
     end
 
+    class CSVFormat
+      def initialize(line_pattern=nil, col_sep=',')
+        @line_pattern = line_pattern
+        @col_sep = col_sep
+      end
+
+      def format_table(tree_table)
+        CSV.generate('', col_sep: @col_sep) do |csv|
+          tree_table.each {|row| csv << row }
+        end
+      end
+    end
+
     def format(formatter=PlainTextFormat.new)
       formatter.format_table(@tree_table)
     end
