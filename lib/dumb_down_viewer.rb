@@ -46,10 +46,14 @@ module DumbDownViewer
     def collect_entries
       dirs, files = DumbDownViewer.collect_directories_and_files(@name_with_path)
       depth = @depth + 1
-      @directories = dirs.map {|dir| DirNode.new(@name_with_path, dir, depth) }
+      @directories = entry_nodes(dirs, DirNode, depth)
       @directories.each {|dir| dir.collect_entries }
-      @files = files.map {|file| FileNode.new(@name_with_path, file, depth) }
+      @files = entry_nodes(files, FileNode, depth)
       @sub_nodes = @files + @directories
+    end
+
+    def entry_nodes(nodes, node_class, depth)
+      nodes.map {|node| node_class.new(@name_with_path, node, depth) }
     end
   end
 
