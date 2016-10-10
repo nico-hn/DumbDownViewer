@@ -37,7 +37,8 @@ module DumbDownViewer
   :corner: '└─ '
 YAML_DATA
 
-      def initialize(line_pattern=:default)
+      def initialize(line_pattern=:default, col_sep=nil)
+        # col_sep is just for having common interface
         @line = LINE_PATTERNS[line_pattern]
       end
 
