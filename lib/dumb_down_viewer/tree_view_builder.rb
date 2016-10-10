@@ -1,5 +1,6 @@
 require 'dumb_down_viewer'
 require 'dumb_down_viewer/visitor'
+require 'csv'
 
 module DumbDownViewer
   class TreeViewBuilder < Visitor
@@ -65,6 +66,19 @@ module DumbDownViewer
 
       def table_to_output_format(table)
         fill_spaces(table).map {|r| r.join }.join($/) + $/
+      end
+    end
+
+    class TreeCSVFormat < PlainTextFormat
+      def initialize(line_pattern=LINE_PATTERN, col_sep=',')
+        @line = line_pattern
+        @col_sep = col_sep
+      end
+
+      def table_to_output_format(table)
+        CSV.generate('', col_sep: @col_sep) do |csv|
+          table.each {|row| csv << row }
+        end
       end
     end
 
