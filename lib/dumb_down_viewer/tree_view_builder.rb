@@ -127,9 +127,10 @@ YAML_DATA
       tree.accept(self, nil)
     end
 
-    def determine_depth(tree)
+    def determine_depth(tree) # update of test necessary
+      @tree_depth = 0
       depth_checker = Visitor.new do |node, memo|
-        @tree_depth = node.depth > memo ? node.depth : memo
+        @tree_depth = node.depth > @tree_depth ? node.depth : @tree_depth
       end
       tree.accept(depth_checker, 0)
     end
