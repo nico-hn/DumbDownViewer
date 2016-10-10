@@ -14,7 +14,7 @@ module DumbDownViewer
 
   def self.build_node_tree(dir)
     dirname, filename = File.split(dir)
-    DirNode.new(dirname, filename, 0)
+    DirNode.new(dirname, filename, 0).tap {|dir| dir.collect_entries }
   end
 
   class Node
@@ -43,14 +43,11 @@ module DumbDownViewer
   class DirNode < Node
     attr_reader :directories, :files
 
-    def setup
-      collect_entries
-    end
-
     def collect_entries
       dirs, files = DumbDownViewer.collect_directories_and_files(@name_with_path)
       depth = @depth + 1
       @directories = dirs.map {|dir| DirNode.new(@name_with_path, dir, depth) }
+      @directories.each {|dir| dir.collect_entries }
       @files = files.map {|file| FileNode.new(@name_with_path, file, depth) }
       @sub_nodes = @files + @directories
     end
