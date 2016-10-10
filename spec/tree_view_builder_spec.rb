@@ -142,6 +142,16 @@ CSV
       expect(builder.instance_eval('@tree_depth')).to eq(3)
     end
 
+    it '#directory? and #file? returns opposite value for a given node' do
+      dir = @tree
+      file = @tree.sub_nodes[0]
+
+      expect(@tree.directory?).to be_truthy
+      expect(file.directory?).to be_falsy
+      expect(@tree.file?).to be_falsy
+      expect(file.file?).to be_truthy
+    end
+
     it "#new_table_row returns an array whose size is the depth of tree + 1" do
       builder = DumbDownViewer::TreeViewBuilder.create(@tree)
       table_row = builder.new_table_row

@@ -38,6 +38,14 @@ module DumbDownViewer
     def to_s
       @name
     end
+
+    def directory?
+      kind_of? DirNode
+    end
+
+    def file?
+      kind_of? FileNode
+    end
   end
 
   class DirNode < Node
