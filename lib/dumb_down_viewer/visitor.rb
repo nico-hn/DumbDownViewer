@@ -45,7 +45,7 @@ module DumbDownViewer
       delete_method = keep ? :keep_if : :delete_if
       @memo_update = proc do |node, memo|
         unless node.kind_of? FileNode
-          [node.sub_nodes, node.directories, node.files].each do |nodes|
+          [node.directories, node.files].each do |nodes|
             nodes.send(delete_method) {|n| criteria.call(n) }
           end
         end
