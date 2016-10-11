@@ -31,6 +31,9 @@ level:
 match:
   short: "-P [pattern]"
   description: "List only those files that match the pattern given"
+ignore_match:
+  short: "-I [pattern]"
+  description: "Do not list files that match the given pattern"
 YAML
 
     def self.parse_command_line_options
@@ -44,6 +47,7 @@ YAML
         opt.on(:directories) {|directories| options[:directories] = true }
         opt.on(:level) {|level| options[:level] = level.to_i }
         opt.on(:match) {|pattern| options[:match] = pattern }
+        opt.on(:ignore_match) {|pattern| options[:ignore_match] = pattern }
         opt.parse!
       end
       options
@@ -56,6 +60,7 @@ YAML
       prune_level(tree, options[:level]) if options[:level]
       prune_files(tree) if options[:directories]
       select_match(tree, options[:match]) if options[:match]
+      ignore_match(tree, options[:ignore_match]) if options[:ignore_match]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
@@ -75,6 +80,12 @@ YAML
     def self.select_match(tree, exp)
       pat = Regexp.compile(exp)
       pruner = DumbDownViewer::TreePruner.create {|node| node.directory? or pat =~ node.name }
+      pruner.visit(tree, nil)
+    end
+
+    def self.ignore_match(tree, exp)
+      pat = Regexp.compile(exp)
+      pruner = DumbDownViewer::TreePruner.create(false) {|node| not node.directory? and pat =~ node.name }
       pruner.visit(tree, nil)
     end
   end
