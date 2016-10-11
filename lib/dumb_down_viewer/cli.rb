@@ -45,6 +45,9 @@ output:
   short: "-o [output_file]"
   long: "--output [=output_file]"
   description: "Output to file instead of stdout"
+file_limit:
+  long: "--filelimit [=number_of_files]"
+  description: "Do not descend dirs with more than the specified number of files in them"
 YAML
 
     def self.parse_command_line_options
@@ -62,6 +65,7 @@ YAML
         opt.on(:show_all) { options[:show_all] = true }
         opt.on(:ignore_case) { options[:ignore_case] = true }
         opt.on(:output) {|output_file| options[:output] = output_file }
+        opt.on(:file_limit) {|number_of_files| options[:file_limit] = number_of_files.to_i }
         opt.parse!
       end
       options
@@ -72,6 +76,7 @@ YAML
       col_sep = options[:format] == :csv ? ',' : "\t"
       tree = DumbDownViewer.build_node_tree(ARGV[0])
       prune_dot_files(tree) unless options[:show_all]
+      prune_dirs_with_more_than(tree, options[:file_limit]) if options[:file_limit]
       prune_level(tree, options[:level]) if options[:level]
       prune_files(tree) if options[:directories]
       select_match(tree, options) if options[:match]
@@ -80,7 +85,12 @@ YAML
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
       open_output(options[:output]) do |out|
-        out.print formatter.format_table(builder.tree_table)
+        result = if options[:file_limit] and tree.sub_nodes.empty?
+                   ''
+                 else
+                   formatter.format_table(builder.tree_table)
+                 end
+        out.print result
       end
     end
 
@@ -108,6 +118,17 @@ YAML
     def self.ignore_match(tree, options)
       pat = Regexp.compile(options[:ignore_match], options[:ignore_case])
       pruner = DumbDownViewer::TreePruner.create(false) {|node| not node.directory? and pat =~ node.name }
+      pruner.visit(tree, nil)
+    end
+
+    def self.prune_dirs_with_more_than(tree, number_of_files)
+      pruner = DumbDownViewer::TreePruner.create(false) do |node|
+        node.directory? and node.sub_nodes.size > number_of_files
+      end
+      if tree.sub_nodes.size > number_of_files
+        tree.directories.clear
+        tree.files.clear
+      end
       pruner.visit(tree, nil)
     end
 
