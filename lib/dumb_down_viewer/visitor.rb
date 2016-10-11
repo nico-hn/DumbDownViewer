@@ -73,6 +73,21 @@ module DumbDownViewer
   end
 
   class FileCountSummary < Visitor
+    class NodeFormat < DumbDownViewer::NodeFormat
+      def format_dir(node)
+        report = "[#{node.name}] => "
+        data = node.summary
+        report << data.keys.map {|ext| file_count(data, ext) }.join(', ')
+      end
+
+      def file_count(data, ext)
+        count = data[ext].size
+        unit = count == 1 ? 'file'.freeze : 'files'.freeze
+        ext = '(misc)'.freeze if ext.empty?
+        "#{ext}: #{count} #{unit}"
+      end
+    end
+
     def visit_dir_node(node, memo)
       node.summary = node.files.group_by {|file| file.extention }
       visit_sub_nodes(node, memo)

@@ -38,6 +38,15 @@ describe DumbDownViewer do
         expect(html_files.size).to eq(1)
         expect(html_files[0].name).to eq('index.html')
       end
+
+      it 'NodeFormat#[] handles appropriately summaries gathered by FileCountSummary' do
+        tree = DumbDownViewer.build_node_tree('spec/data')
+        visitor = DumbDownViewer::FileCountSummary.new
+        tree.accept(visitor, nil)
+        node_format = DumbDownViewer::FileCountSummary::NodeFormat.new
+        expect(node_format[tree]).to eq('[data] => (misc): 1 file, html: 1 file')
+        expect(node_format[tree.directories[1].directories[1]]).to eq('[cannot_fly] => jpg: 2 files, txt: 2 files')
+      end
     end
   end
 end
