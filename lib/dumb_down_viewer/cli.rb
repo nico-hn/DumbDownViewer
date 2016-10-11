@@ -25,6 +25,9 @@ directories:
   short: "-d"
   long: "--directories-only"
   description: "List directories only"
+level:
+  short: "-L [level]"
+  description: "Descend only level directories deep"
 YAML
 
     def self.parse_command_line_options
@@ -36,6 +39,7 @@ YAML
         opt.on(:style) {|style| options[:style] = style.to_sym }
         opt.on(:format) {|format| options[:format] = format.to_sym }
         opt.on(:directories) {|directories| options[:directories] = true }
+        opt.on(:level) {|level| options[:level] = level.to_i }
         opt.parse!
       end
       options
@@ -45,6 +49,7 @@ YAML
       options = parse_command_line_options
       col_sep = options[:format] == :csv ? ',' : "\t"
       tree = DumbDownViewer.build_node_tree(ARGV[0])
+      prune_level(tree, options[:level]) if options[:level]
       prune_files(tree) if options[:directories]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
@@ -54,6 +59,11 @@ YAML
 
     def self.prune_files(tree)
       pruner = DumbDownViewer::TreePruner.create {|node| node.directory? }
+      pruner.visit(tree, nil)
+    end
+
+    def self.prune_level(tree, level)
+      pruner = DumbDownViewer::TreePruner.create {|node| node.depth <= level }
       pruner.visit(tree, nil)
     end
   end
