@@ -93,4 +93,15 @@ module DumbDownViewer
       visit_sub_nodes(node, memo)
     end
   end
+
+  TotalNodeCount = Visitor.create do |node, memo|
+    memo[node.class] += 1
+    memo
+  end
+
+  def TotalNodeCount.count(tree)
+    counter = Hash.new(0)
+    tree.accept(self, counter)
+    { directories: counter[DirNode] - 1, files: counter[FileNode] }
+  end
 end

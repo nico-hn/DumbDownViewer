@@ -48,5 +48,14 @@ describe DumbDownViewer do
         expect(node_format[tree.directories[1].directories[1]]).to eq('[cannot_fly] => jpg: 2 files, txt: 2 files')
       end
     end
+
+    describe DumbDownViewer::TotalNodeCount do
+      it '.count returns a Hash that contains the number of directories/files under the given directory' do
+        tree = DumbDownViewer.build_node_tree('spec/data')
+        counter = DumbDownViewer::TotalNodeCount.count(tree)
+
+        expect(counter).to eq({ directories: 6, files: 11 })
+      end
+    end
   end
 end
