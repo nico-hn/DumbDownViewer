@@ -41,6 +41,10 @@ show_all:
 ignore_case:
   long: "--ignore-case"
   description: "Ignore case when pattern matching"
+output:
+  short: "-o [output_file]"
+  long: "--output [=output_file]"
+  description: "Output to file instead of stdout"
 YAML
 
     def self.parse_command_line_options
@@ -57,6 +61,7 @@ YAML
         opt.on(:ignore_match) {|pattern| options[:ignore_match] = pattern }
         opt.on(:show_all) { options[:show_all] = true }
         opt.on(:ignore_case) { options[:ignore_case] = true }
+        opt.on(:output) {|output_file| options[:output] = output_file }
         opt.parse!
       end
       options
@@ -74,7 +79,9 @@ YAML
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
-      print formatter.format_table(builder.tree_table)
+      open_output(options[:output]) do |out|
+        out.print formatter.format_table(builder.tree_table)
+      end
     end
 
     def self.prune_dot_files(tree)
@@ -102,6 +109,16 @@ YAML
       pat = Regexp.compile(options[:ignore_match], options[:ignore_case])
       pruner = DumbDownViewer::TreePruner.create(false) {|node| not node.directory? and pat =~ node.name }
       pruner.visit(tree, nil)
+    end
+
+    def self.open_output(filename)
+      if filename
+        open(File.expand_path(filename), "wb") do |out|
+          yield out
+        end
+      else
+        yield STDOUT
+      end
     end
   end
 end
