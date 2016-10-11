@@ -34,6 +34,10 @@ match:
 ignore_match:
   short: "-I [pattern]"
   description: "Do not list files that match the given pattern"
+show_all:
+  short: "-a"
+  long: "--all"
+  description: "Show all files including dot files"
 YAML
 
     def self.parse_command_line_options
@@ -48,6 +52,7 @@ YAML
         opt.on(:level) {|level| options[:level] = level.to_i }
         opt.on(:match) {|pattern| options[:match] = pattern }
         opt.on(:ignore_match) {|pattern| options[:ignore_match] = pattern }
+        opt.on(:show_all) { options[:show_all] = true }
         opt.parse!
       end
       options
@@ -57,6 +62,7 @@ YAML
       options = parse_command_line_options
       col_sep = options[:format] == :csv ? ',' : "\t"
       tree = DumbDownViewer.build_node_tree(ARGV[0])
+      prune_dot_files(tree) unless options[:show_all]
       prune_level(tree, options[:level]) if options[:level]
       prune_files(tree) if options[:directories]
       select_match(tree, options[:match]) if options[:match]
@@ -65,6 +71,11 @@ YAML
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
       print formatter.format_table(builder.tree_table)
+    end
+
+    def self.prune_dot_files(tree)
+      pruner = DumbDownViewer::TreePruner.create(false) {|node| node.name.start_with? '.' }
+      pruner.visit(tree, nil)
     end
 
     def self.prune_files(tree)
