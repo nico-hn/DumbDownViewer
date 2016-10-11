@@ -7,6 +7,25 @@ module DumbDownViewer
   class TreeViewBuilder < Visitor
     attr_reader :tree_table
 
+    class NodeFormat
+      def [](node)
+        case node
+        when DumbDownViewer::DirNode
+          format_dir(node)
+        when DumbDownViewer::FileNode
+          format_file(node)
+        end
+      end
+
+      def format_dir(node)
+        "[#{node.name}]"
+      end
+
+      def format_file(node)
+        node.name
+      end
+    end
+
     class PlainTextFormat
       attr_accessor :line
 
@@ -44,9 +63,10 @@ module DumbDownViewer
 
 YAML_DATA
 
-      def initialize(line_pattern=:default, col_sep=nil)
+      def initialize(line_pattern=:default, col_sep=nil, node_format=nil)
         # col_sep is just for having common interface
         @line = LINE_PATTERNS[line_pattern]
+        @node_format = node_format || NodeFormat.new
       end
 
       def format_table(tree_table)
@@ -76,13 +96,13 @@ YAML_DATA
             fr[j] = @line[:v_line]
           end
         end
-        fr[i] = f_node.kind_of?(DirNode) ? format_dir_node(f_node) : f_node.name
+        fr[i] = f_node.kind_of?(DirNode) ? @node_format[f_node] : f_node.name
       end
 
       def draw_last_line(line)
         line.each_index do |i|
           node = line[i]
-          line[i] = format_dir_node(node) if node.kind_of?(DirNode)
+          line[i] = @node_format[node] if node.kind_of?(DirNode)
         end
       end
 
@@ -104,16 +124,13 @@ YAML_DATA
       def table_to_output_format(table)
         fill_spaces(table).map {|r| r.join }.join($/) + $/
       end
-
-      def format_dir_node(node)
-        "[#{node.name}]"
-      end
     end
 
     class TreeCSVFormat < PlainTextFormat
-      def initialize(line_pattern=:default, col_sep=',')
+      def initialize(line_pattern=:default, col_sep=',', node_format=nil)
         @line = LINE_PATTERNS[line_pattern]
         @col_sep = col_sep
+        @node_format = node_format || NodeFormat.new
       end
 
       def table_to_output_format(table)
@@ -124,9 +141,10 @@ YAML_DATA
     end
 
     class CSVFormat
-      def initialize(line_pattern=nil, col_sep=',')
+      def initialize(line_pattern=nil, col_sep=',', node_format=nil)
         @line_pattern = line_pattern
         @col_sep = col_sep
+        @node_format = node_format || NodeFormat.new
       end
 
       def format_table(tree_table)
