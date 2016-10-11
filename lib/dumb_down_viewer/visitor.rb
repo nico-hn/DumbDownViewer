@@ -52,4 +52,10 @@ module DumbDownViewer
       end
     end
   end
+
+  class FileCountSummary < Visitor
+    def visit_dir_node(node, memo)
+      node.summary = node.files.group_by {|file| file.extention }
+    end
+  end
 end

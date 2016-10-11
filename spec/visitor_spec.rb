@@ -25,5 +25,19 @@ describe DumbDownViewer do
       expect(tree_depth).to eq(3)
       expect(image_files).to eq(%w(penguin.jpg ostrich.jpg))
     end
+
+    describe DumbDownViewer::FileCountSummary do
+      it 'set #summary of each instance of DirNodes' do
+        tree = DumbDownViewer.build_node_tree('spec/data')
+        visitor = DumbDownViewer::FileCountSummary.new
+        tree.accept(visitor, nil)
+        files_without_ext = tree.summary['']
+        html_files = tree.summary['html']
+        expect(files_without_ext.size).to eq(1)
+        expect(files_without_ext[0].name).to eq('README')
+        expect(html_files.size).to eq(1)
+        expect(html_files[0].name).to eq('index.html')
+      end
+    end
   end
 end
