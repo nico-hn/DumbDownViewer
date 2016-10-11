@@ -7,25 +7,6 @@ module DumbDownViewer
   class TreeViewBuilder < Visitor
     attr_reader :tree_table
 
-    class NodeFormat
-      def [](node)
-        case node
-        when DumbDownViewer::DirNode
-          format_dir(node)
-        when DumbDownViewer::FileNode
-          format_file(node)
-        end
-      end
-
-      def format_dir(node)
-        "[#{node.name}]"
-      end
-
-      def format_file(node)
-        node.name
-      end
-    end
-
     class PlainTextFormat
       attr_accessor :line
 

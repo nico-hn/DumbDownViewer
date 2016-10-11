@@ -39,6 +39,25 @@ module DumbDownViewer
     end
   end
 
+  class NodeFormat
+    def [](node)
+      case node
+      when DumbDownViewer::DirNode
+        format_dir(node)
+      when DumbDownViewer::FileNode
+        format_file(node)
+      end
+    end
+
+    def format_dir(node)
+      "[#{node.name}]"
+    end
+
+    def format_file(node)
+      node.name
+    end
+  end
+
   class TreePruner < Visitor
     def setup(keep=true)
       criteria = @memo_update
