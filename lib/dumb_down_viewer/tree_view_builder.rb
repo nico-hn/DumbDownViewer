@@ -76,13 +76,13 @@ YAML_DATA
             fr[j] = @line[:v_line]
           end
         end
-        fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
+        fr[i] = f_node.kind_of?(DirNode) ? format_dir_node(f_node) : f_node.name
       end
 
       def draw_last_line(line)
         line.each_index do |i|
           node = line[i]
-          line[i] = "[#{node.name}]" if node.kind_of?(DirNode)
+          line[i] = format_dir_node(node) if node.kind_of?(DirNode)
         end
       end
 
@@ -103,6 +103,10 @@ YAML_DATA
 
       def table_to_output_format(table)
         fill_spaces(table).map {|r| r.join }.join($/) + $/
+      end
+
+      def format_dir_node(node)
+        "[#{node.name}]"
       end
     end
 
