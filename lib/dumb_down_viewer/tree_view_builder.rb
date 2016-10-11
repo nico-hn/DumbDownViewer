@@ -96,7 +96,7 @@ YAML_DATA
             fr[j] = @line[:v_line]
           end
         end
-        fr[i] = f_node.kind_of?(DirNode) ? @node_format[f_node] : f_node.name
+        fr[i] = @node_format[f_node]
       end
 
       def draw_last_line(line)
