@@ -28,6 +28,9 @@ directories:
 level:
   short: "-L [level]"
   description: "Descend only level directories deep"
+match:
+  short: "-P [pattern]"
+  description: "List only those files that match the pattern given"
 YAML
 
     def self.parse_command_line_options
@@ -40,6 +43,7 @@ YAML
         opt.on(:format) {|format| options[:format] = format.to_sym }
         opt.on(:directories) {|directories| options[:directories] = true }
         opt.on(:level) {|level| options[:level] = level.to_i }
+        opt.on(:match) {|pattern| options[:match] = pattern }
         opt.parse!
       end
       options
@@ -51,6 +55,7 @@ YAML
       tree = DumbDownViewer.build_node_tree(ARGV[0])
       prune_level(tree, options[:level]) if options[:level]
       prune_files(tree) if options[:directories]
+      select_match(tree, options[:match]) if options[:match]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
@@ -64,6 +69,12 @@ YAML
 
     def self.prune_level(tree, level)
       pruner = DumbDownViewer::TreePruner.create {|node| node.depth <= level }
+      pruner.visit(tree, nil)
+    end
+
+    def self.select_match(tree, exp)
+      pat = Regexp.compile(exp)
+      pruner = DumbDownViewer::TreePruner.create {|node| node.directory? or pat =~ node.name }
       pruner.visit(tree, nil)
     end
   end
