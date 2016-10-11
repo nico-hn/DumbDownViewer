@@ -19,6 +19,7 @@ module DumbDownViewer
 
   class Node
     attr_reader :sub_nodes, :directory, :name, :depth
+    attr_accessor :summary
 
     def initialize(pwd, name, depth)
       @directory = pwd
