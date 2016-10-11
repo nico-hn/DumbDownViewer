@@ -48,6 +48,9 @@ output:
 file_limit:
   long: "--filelimit [=number_of_files]"
   description: "Do not descend dirs with more than the specified number of files in them"
+summary:
+  long: "--summary"
+  description: "Add summary information about directories"
 YAML
 
     def self.parse_command_line_options
@@ -66,6 +69,7 @@ YAML
         opt.on(:ignore_case) { options[:ignore_case] = true }
         opt.on(:output) {|output_file| options[:output] = output_file }
         opt.on(:file_limit) {|number_of_files| options[:file_limit] = number_of_files.to_i }
+        opt.on(:summary) { options[:summary] = true }
         opt.parse!
       end
       options
@@ -81,9 +85,10 @@ YAML
       prune_files(tree) if options[:directories]
       select_match(tree, options) if options[:match]
       ignore_match(tree, options) if options[:ignore_match]
+      node_format = options[:summary] ? add_summary(tree) : nil
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
-      formatter = FORMATTER[options[:format]].new(style, col_sep)
+      formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
       open_output(options[:output]) do |out|
         result = if options[:file_limit] and tree.sub_nodes.empty?
                    ''
@@ -130,6 +135,12 @@ YAML
         tree.files.clear
       end
       pruner.visit(tree, nil)
+    end
+
+    def self.add_summary(tree)
+      visitor = DumbDownViewer::FileCountSummary.new
+      tree.accept(visitor, nil)
+      DumbDownViewer::FileCountSummary::NodeFormat.new
     end
 
     def self.open_output(filename)
