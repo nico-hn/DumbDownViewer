@@ -38,6 +38,9 @@ show_all:
   short: "-a"
   long: "--all"
   description: "Show all files including dot files"
+ignore_case:
+  long: "--ignore-case"
+  description: "Ignore case when pattern matching"
 YAML
 
     def self.parse_command_line_options
@@ -53,6 +56,7 @@ YAML
         opt.on(:match) {|pattern| options[:match] = pattern }
         opt.on(:ignore_match) {|pattern| options[:ignore_match] = pattern }
         opt.on(:show_all) { options[:show_all] = true }
+        opt.on(:ignore_case) { options[:ignore_case] = true }
         opt.parse!
       end
       options
@@ -65,8 +69,8 @@ YAML
       prune_dot_files(tree) unless options[:show_all]
       prune_level(tree, options[:level]) if options[:level]
       prune_files(tree) if options[:directories]
-      select_match(tree, options[:match]) if options[:match]
-      ignore_match(tree, options[:ignore_match]) if options[:ignore_match]
+      select_match(tree, options) if options[:match]
+      ignore_match(tree, options) if options[:ignore_match]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep)
@@ -88,14 +92,14 @@ YAML
       pruner.visit(tree, nil)
     end
 
-    def self.select_match(tree, exp)
-      pat = Regexp.compile(exp)
+    def self.select_match(tree, options)
+      pat = Regexp.compile(options[:match], options[:ignore_case])
       pruner = DumbDownViewer::TreePruner.create {|node| node.directory? or pat =~ node.name }
       pruner.visit(tree, nil)
     end
 
-    def self.ignore_match(tree, exp)
-      pat = Regexp.compile(exp)
+    def self.ignore_match(tree, options)
+      pat = Regexp.compile(options[:ignore_match], options[:ignore_case])
       pruner = DumbDownViewer::TreePruner.create(false) {|node| not node.directory? and pat =~ node.name }
       pruner.visit(tree, nil)
     end
