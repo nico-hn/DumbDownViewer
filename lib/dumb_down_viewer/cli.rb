@@ -82,10 +82,10 @@ YAML
       prune_dot_files(tree) unless options[:show_all]
       prune_dirs_with_more_than(tree, options[:file_limit]) if options[:file_limit]
       prune_level(tree, options[:level]) if options[:level]
-      prune_files(tree) if options[:directories]
       select_match(tree, options) if options[:match]
       ignore_match(tree, options) if options[:ignore_match]
       node_format = options[:summary] ? add_summary(tree) : nil
+      prune_files(tree) if options[:directories]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
