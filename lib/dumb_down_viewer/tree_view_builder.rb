@@ -58,6 +58,7 @@ YAML_DATA
           end
         end
 
+        draw_last_line(t[-1])
         update_root_directory_name(tree_table[0][0], t)
         table_to_output_format(t.transpose)
       end
@@ -76,6 +77,13 @@ YAML_DATA
           end
         end
         fr[i] = f_node.kind_of?(DirNode) ? "[#{f_node.name}]" : f_node.name
+      end
+
+      def draw_last_line(line)
+        line.each_index do |i|
+          node = line[i]
+          line[i] = "[#{node.name}]" if node.kind_of?(DirNode)
+        end
       end
 
       def fill_spaces(table)

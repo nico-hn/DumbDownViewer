@@ -279,5 +279,30 @@ TABLE
       result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(table)
       expect(result).to eq(expected_result)
     end
+
+    it 'with PlainTextFormat.format_table directories at the bottom of tree should be enclosed in [] ' do
+      expected_result = <<TABLE
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     └─ [cannot_fly]
+TABLE
+
+      tree = DumbDownViewer.build_node_tree('spec/data')
+      pruner = DumbDownViewer::TreePruner.create {|node| node.depth <= 2 }
+      pruner.visit(tree, nil)
+      builder = DumbDownViewer::TreeViewBuilder.create(tree)
+
+      result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(builder.tree_table)
+
+      expect(result).to eq(expected_result)
+    end
   end
 end
