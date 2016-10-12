@@ -47,6 +47,14 @@ describe DumbDownViewer do
         expect(node_format[tree]).to eq('[data] => (misc): 1 file, html: 1 file')
         expect(node_format[tree.directories[1].directories[1]]).to eq('[cannot_fly] => jpg: 2 files, txt: 2 files')
       end
+
+      it 'NodeFormat#[] does not add summary information if there is no file in a directory' do
+        tree = DumbDownViewer.build_node_tree('spec/sample_dir/def')
+        visitor = DumbDownViewer::FileCountSummary.new
+        tree.accept(visitor, nil)
+        node_format = DumbDownViewer::FileCountSummary::NodeFormat.new
+        expect(node_format[tree]).to eq('[def]')
+      end
     end
 
     describe DumbDownViewer::TotalNodeCount do
