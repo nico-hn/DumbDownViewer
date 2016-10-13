@@ -65,5 +65,16 @@ describe DumbDownViewer do
         expect(counter).to eq({ directories: 6, files: 11 })
       end
     end
+
+    describe DumbDownViewer::JSONConverter do
+      it 'converts a given directory tree into a JSON representation' do
+        expected_json = '{"type":"directory","name":"data","contents":[{"type":"file","name":"README"},{"type":"file","name":"index.html"},{"type":"directory","name":"mammalia","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"bat.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"elephant.txt"}]}]},{"type":"directory","name":"aves","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"sparrow.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"penguin.jpg"},{"type":"file","name":"penguin.txt"},{"type":"file","name":"ostrich.txt"},{"type":"file","name":"ostrich.jpg"}]}]}]}'
+
+        tree = DumbDownViewer.build_node_tree('spec/data')
+        json = DumbDownViewer::JSONConverter.dump(tree)
+
+        expect(json).to eq(expected_json)
+      end
+    end
   end
 end

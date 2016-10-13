@@ -1,4 +1,5 @@
 require 'dumb_down_viewer'
+require 'json'
 
 module DumbDownViewer
   class Visitor
@@ -105,5 +106,23 @@ module DumbDownViewer
     counter = Hash.new(0)
     tree.accept(self, counter)
     { directories: counter[DirNode] - 1, files: counter[FileNode] }
+  end
+
+  class JSONConverter
+    def self.dump(tree, with_path=false)
+      JSON.dump(new.visit(tree, with_path))
+    end
+
+    def visit(node, with_path=false)
+      case node
+      when DirNode
+        {
+          type: 'directory', name: node.name,
+          contents: node.sub_nodes.map {|n| n.accept(self, with_path) }
+        }
+      when FileNode
+        { type: 'file', name: node.name }
+      end
+    end
   end
 end
