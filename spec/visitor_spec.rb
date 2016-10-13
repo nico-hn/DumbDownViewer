@@ -105,6 +105,44 @@ ROOT
         expect(doc.to_xml).to eq(expected_doc)
         expect(tree_root.to_xml).to eq(expected_tree_root.chomp)
       end
+
+      it '#visit returns tree of directories/files in XML representation' do
+        expected_xml = <<XML
+<directory name="data">
+  <file name="README"> </file>
+  <file name="index.html"> </file>
+  <directory name="mammalia">
+    <file name="index.html"> </file>
+    <directory name="can_fly">
+      <file name="bat.txt"> </file>
+    </directory>
+    <directory name="cannot_fly">
+      <file name="elephant.txt"> </file>
+    </directory>
+  </directory>
+  <directory name="aves">
+    <file name="index.html"> </file>
+    <directory name="can_fly">
+      <file name="sparrow.txt"> </file>
+    </directory>
+    <directory name="cannot_fly">
+      <file name="penguin.jpg"> </file>
+      <file name="penguin.txt"> </file>
+      <file name="ostrich.txt"> </file>
+      <file name="ostrich.jpg"> </file>
+    </directory>
+  </directory>
+</directory>
+XML
+
+        tree = DumbDownViewer.build_node_tree('spec/data')
+
+        visitor = DumbDownViewer::XMLConverter.new
+        visitor.create_doc
+        xml = visitor.visit(tree, false)
+
+        expect(xml.to_xml).to eq(expected_xml.chomp)
+      end
     end
   end
 end

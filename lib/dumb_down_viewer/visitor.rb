@@ -144,9 +144,35 @@ module DumbDownViewer
 </tree>
 XML
 
+    def visit(node, with_path)
+      case node
+      when DirNode
+        create_dir_element(node, with_path).tap do |elm|
+          node.sub_nodes.each do |n|
+            n.accept(self, with_path).parent = elm
+          end
+        end
+      when FileNode
+        create_file_element(node, with_path)
+      end
+    end
+
     def create_doc
       @doc = Nokogiri::XML(XML_TEMPLATE).tap do |doc|
         @tree_root = doc.at_xpath('//tree')
+      end
+    end
+
+    def create_dir_element(node, with_path)
+      Nokogiri::XML::Node.new('directory'.freeze, @doc).tap do |elm|
+        elm['name'.freeze] = node.name
+      end
+    end
+
+    def create_file_element(node, with_path)
+      Nokogiri::XML::Node.new('file'.freeze, @doc).tap do |elm|
+        elm['name'.freeze] = node.name
+        elm.content = ' '.freeze
       end
     end
   end
