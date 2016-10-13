@@ -169,6 +169,14 @@ module DumbDownViewer
       end
     end
 
+    def dump(tree, with_path)
+      file_regexp = /#{Regexp.escape("> <\/file>")}/
+      visit(tree, with_path).parent = @tree_root
+      @doc.to_xml.gsub(file_regexp, '></file>')
+    end
+
+    private
+
     def create_dir_element(node, with_path)
       Nokogiri::XML::Node.new('directory'.freeze, @doc).tap do |elm|
         elm['name'.freeze] = name_value(node, with_path)
@@ -188,12 +196,6 @@ module DumbDownViewer
       else
         node.name
       end
-    end
-
-    def dump(tree, with_path)
-      file_regexp = /#{Regexp.escape("> <\/file>")}/
-      visit(tree, with_path).parent = @tree_root
-      @doc.to_xml.gsub(file_regexp, '></file>')
     end
   end
 end
