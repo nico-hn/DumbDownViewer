@@ -90,20 +90,16 @@ describe DumbDownViewer do
       it '#create_doc assigns XMLConverter#doc and #tree_root' do
         expected_doc = <<DOC
 <?xml version="1.0" encoding="UTF-8"?>
-<tree>
-</tree>
+<tree/>
 DOC
-        expected_tree_root = <<ROOT
-<tree>
-</tree>
-ROOT
+        expected_tree_root = '<tree/>'
 
         visitor = DumbDownViewer::XMLConverter.new
         doc = visitor.create_doc
         tree_root = visitor.tree_root
 
         expect(doc.to_xml).to eq(expected_doc)
-        expect(tree_root.to_xml).to eq(expected_tree_root.chomp)
+        expect(tree_root.to_xml).to eq(expected_tree_root)
       end
 
       it '#visit returns tree of directories/files in XML representation' do

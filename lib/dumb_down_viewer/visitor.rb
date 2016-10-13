@@ -138,11 +138,7 @@ module DumbDownViewer
 
   class XMLConverter
     attr_reader :doc, :tree_root
-    XML_TEMPLATE = <<XML
-<?xml version="1.0" encoding="UTF-8"?>
-<tree>
-</tree>
-XML
+    XML_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>'
 
     def visit(node, with_path)
       case node
@@ -159,7 +155,8 @@ XML
 
     def create_doc
       @doc = Nokogiri::XML(XML_TEMPLATE).tap do |doc|
-        @tree_root = doc.at_xpath('//tree')
+        @tree_root = Nokogiri::XML::Node.new('tree'.freeze, doc)
+        @tree_root.parent = doc
       end
     end
 
