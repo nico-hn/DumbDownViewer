@@ -178,6 +178,45 @@ XML
 
         expect(xml).to eq(expected_xml)
       end
+
+      it '.dump appends path to the value of "name" field, when the second argument of #dump is true' do
+        expected_xml = <<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tree>
+  <directory name="spec/data">
+    <file name="spec/data/README"></file>
+    <file name="spec/data/index.html"></file>
+    <directory name="spec/data/mammalia">
+      <file name="spec/data/mammalia/index.html"></file>
+      <directory name="spec/data/mammalia/can_fly">
+        <file name="spec/data/mammalia/can_fly/bat.txt"></file>
+      </directory>
+      <directory name="spec/data/mammalia/cannot_fly">
+        <file name="spec/data/mammalia/cannot_fly/elephant.txt"></file>
+      </directory>
+    </directory>
+    <directory name="spec/data/aves">
+      <file name="spec/data/aves/index.html"></file>
+      <directory name="spec/data/aves/can_fly">
+        <file name="spec/data/aves/can_fly/sparrow.txt"></file>
+      </directory>
+      <directory name="spec/data/aves/cannot_fly">
+        <file name="spec/data/aves/cannot_fly/penguin.jpg"></file>
+        <file name="spec/data/aves/cannot_fly/penguin.txt"></file>
+        <file name="spec/data/aves/cannot_fly/ostrich.txt"></file>
+        <file name="spec/data/aves/cannot_fly/ostrich.jpg"></file>
+      </directory>
+    </directory>
+  </directory>
+</tree>
+XML
+
+        tree = DumbDownViewer.build_node_tree('spec/data')
+
+        xml = DumbDownViewer::XMLConverter.dump(tree, true)
+
+        expect(xml).to eq(expected_xml)
+      end
     end
   end
 end

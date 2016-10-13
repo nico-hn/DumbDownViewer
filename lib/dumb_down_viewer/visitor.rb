@@ -171,14 +171,22 @@ module DumbDownViewer
 
     def create_dir_element(node, with_path)
       Nokogiri::XML::Node.new('directory'.freeze, @doc).tap do |elm|
-        elm['name'.freeze] = node.name
+        elm['name'.freeze] = name_value(node, with_path)
       end
     end
 
     def create_file_element(node, with_path)
       Nokogiri::XML::Node.new('file'.freeze, @doc).tap do |elm|
-        elm['name'.freeze] = node.name
+        elm['name'.freeze] = name_value(node, with_path)
         elm.content = ' '.freeze
+      end
+    end
+
+    def name_value(node, with_path)
+      if with_path
+        File.join(node.directory, node.name)
+      else
+        node.name
       end
     end
 
