@@ -140,6 +140,15 @@ module DumbDownViewer
     attr_reader :doc, :tree_root
     XML_TEMPLATE = '<?xml version="1.0" encoding="UTF-8"?>'
 
+    def self.dump(tree, with_path=false)
+      visitor = new.tap do |v|
+        v.create_doc
+        v.visit(tree, with_path)
+      end
+
+      visitor.dump(tree, with_path)
+    end
+
     def visit(node, with_path)
       case node
       when DirNode
@@ -171,6 +180,12 @@ module DumbDownViewer
         elm['name'.freeze] = node.name
         elm.content = ' '.freeze
       end
+    end
+
+    def dump(tree, with_path)
+      file_regexp = /#{Regexp.escape("> <\/file>")}/
+      visit(tree, with_path).parent = @tree_root
+      @doc.to_xml.gsub(file_regexp, '></file>')
     end
   end
 end

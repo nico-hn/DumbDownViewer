@@ -139,6 +139,45 @@ XML
 
         expect(xml.to_xml).to eq(expected_xml.chomp)
       end
+
+      it '.dump returns tree of directories/files in XML representation' do
+        expected_xml = <<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tree>
+  <directory name="data">
+    <file name="README"></file>
+    <file name="index.html"></file>
+    <directory name="mammalia">
+      <file name="index.html"></file>
+      <directory name="can_fly">
+        <file name="bat.txt"></file>
+      </directory>
+      <directory name="cannot_fly">
+        <file name="elephant.txt"></file>
+      </directory>
+    </directory>
+    <directory name="aves">
+      <file name="index.html"></file>
+      <directory name="can_fly">
+        <file name="sparrow.txt"></file>
+      </directory>
+      <directory name="cannot_fly">
+        <file name="penguin.jpg"></file>
+        <file name="penguin.txt"></file>
+        <file name="ostrich.txt"></file>
+        <file name="ostrich.jpg"></file>
+      </directory>
+    </directory>
+  </directory>
+</tree>
+XML
+
+        tree = DumbDownViewer.build_node_tree('spec/data')
+
+        xml = DumbDownViewer::XMLConverter.dump(tree, false)
+
+        expect(xml).to eq(expected_xml)
+      end
     end
   end
 end
