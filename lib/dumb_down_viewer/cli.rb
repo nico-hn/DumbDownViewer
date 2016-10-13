@@ -51,6 +51,9 @@ file_limit:
 summary:
   long: "--summary"
   description: "Add summary information about directories"
+json:
+  short: "-J"
+  description: "Print out a JSON representation"
 YAML
 
     def self.parse_command_line_options
@@ -70,6 +73,7 @@ YAML
         opt.on(:output) {|output_file| options[:output] = output_file }
         opt.on(:file_limit) {|number_of_files| options[:file_limit] = number_of_files.to_i }
         opt.on(:summary) { options[:summary] = true }
+        opt.on(:json) { options[:json] = true }
         opt.parse!
       end
       options
@@ -86,6 +90,7 @@ YAML
       ignore_match(tree, options) if options[:ignore_match]
       node_format = options[:summary] ? add_summary(tree) : nil
       prune_files(tree) if options[:directories]
+      print_json(tree, options) if options[:json]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
@@ -135,6 +140,14 @@ YAML
         tree.files.clear
       end
       pruner.visit(tree, nil)
+    end
+
+    def self.print_json(tree, options)
+      json = DumbDownViewer::JSONConverter.dump(tree)
+      open_output(options[:output]) do |out|
+        out.puts json
+      end
+      exit
     end
 
     def self.add_summary(tree)
