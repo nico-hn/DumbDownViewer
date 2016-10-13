@@ -135,4 +135,19 @@ module DumbDownViewer
       end
     end
   end
+
+  class XMLConverter
+    attr_reader :doc, :tree_root
+    XML_TEMPLATE = <<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<tree>
+</tree>
+XML
+
+    def create_doc
+      @doc = Nokogiri::XML(XML_TEMPLATE).tap do |doc|
+        @tree_root = doc.at_xpath('//tree')
+      end
+    end
+  end
 end
