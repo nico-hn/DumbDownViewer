@@ -117,11 +117,21 @@ module DumbDownViewer
       case node
       when DirNode
         {
-          type: 'directory', name: node.name,
+          type: 'directory', name: name_value(node, with_path),
           contents: node.sub_nodes.map {|n| n.accept(self, with_path) }
         }
       when FileNode
-        { type: 'file', name: node.name }
+        { type: 'file', name: name_value(node, with_path) }
+      end
+    end
+
+    private
+
+    def name_value(node, with_path)
+      if with_path
+        File.join(node.directory, node.name)
+      else
+        node.name
       end
     end
   end

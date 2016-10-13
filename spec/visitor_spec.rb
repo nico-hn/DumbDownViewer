@@ -75,6 +75,15 @@ describe DumbDownViewer do
 
         expect(json).to eq(expected_json)
       end
+
+      it 'appends path to the value of "name" field, when the second argument of #dump is true' do
+        expected_json = '{"type":"directory","name":"spec/data","contents":[{"type":"file","name":"spec/data/README"},{"type":"file","name":"spec/data/index.html"},{"type":"directory","name":"spec/data/mammalia","contents":[{"type":"file","name":"spec/data/mammalia/index.html"},{"type":"directory","name":"spec/data/mammalia/can_fly","contents":[{"type":"file","name":"spec/data/mammalia/can_fly/bat.txt"}]},{"type":"directory","name":"spec/data/mammalia/cannot_fly","contents":[{"type":"file","name":"spec/data/mammalia/cannot_fly/elephant.txt"}]}]},{"type":"directory","name":"spec/data/aves","contents":[{"type":"file","name":"spec/data/aves/index.html"},{"type":"directory","name":"spec/data/aves/can_fly","contents":[{"type":"file","name":"spec/data/aves/can_fly/sparrow.txt"}]},{"type":"directory","name":"spec/data/aves/cannot_fly","contents":[{"type":"file","name":"spec/data/aves/cannot_fly/penguin.jpg"},{"type":"file","name":"spec/data/aves/cannot_fly/penguin.txt"},{"type":"file","name":"spec/data/aves/cannot_fly/ostrich.txt"},{"type":"file","name":"spec/data/aves/cannot_fly/ostrich.jpg"}]}]}]}'
+
+        tree = DumbDownViewer.build_node_tree('spec/data')
+        json = DumbDownViewer::JSONConverter.dump(tree, true)
+
+        expect(json).to eq(expected_json)
+      end
     end
   end
 end
