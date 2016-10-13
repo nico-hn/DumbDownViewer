@@ -54,6 +54,9 @@ summary:
 json:
   short: "-J"
   description: "Print out a JSON representation"
+xml:
+  short: "-X"
+  description: "Print out an XML representation"
 YAML
 
     def self.parse_command_line_options
@@ -74,6 +77,7 @@ YAML
         opt.on(:file_limit) {|number_of_files| options[:file_limit] = number_of_files.to_i }
         opt.on(:summary) { options[:summary] = true }
         opt.on(:json) { options[:json] = true }
+        opt.on(:xml) { options[:xml] = true }
         opt.parse!
       end
       options
@@ -91,6 +95,7 @@ YAML
       node_format = options[:summary] ? add_summary(tree) : nil
       prune_files(tree) if options[:directories]
       print_json(tree, options) if options[:json]
+      print_xml(tree, options) if options[:xml]
       style = options[:style]
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
@@ -146,6 +151,14 @@ YAML
       json = DumbDownViewer::JSONConverter.dump(tree)
       open_output(options[:output]) do |out|
         out.puts json
+      end
+      exit
+    end
+
+    def self.print_xml(tree, options)
+      xml = DumbDownViewer::XMLConverter.dump(tree)
+      open_output(options[:output]) do |out|
+        out.puts xml
       end
       exit
     end
