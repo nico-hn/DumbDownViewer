@@ -135,7 +135,7 @@ TABLE
 CSV
 
       @expected_csv = <<CSV
-data,,,
+spec/data,,,
 ,README,,
 ,index.html,,
 ,aves,,

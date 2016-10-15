@@ -129,6 +129,8 @@ YAML_DATA
       end
 
       def format_table(tree_table)
+        root = tree_table[0][0]
+        tree_table[0][0] = "#{File.join(root.directory, root.name)}"
         CSV.generate('', col_sep: @col_sep) do |csv|
           tree_table.each {|row| csv << row }
         end
