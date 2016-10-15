@@ -142,5 +142,23 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '--directories-only' do
+      it '-d returns a tree of directories' do
+        expected_result = <<RESULT
+[spec/data]
+├─ [aves]
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+└─ [mammalia]
+     ├─ [can_fly]
+     └─ [cannot_fly]
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('-d spec/data')
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
