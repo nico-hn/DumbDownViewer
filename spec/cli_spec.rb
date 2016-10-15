@@ -195,6 +195,16 @@ RESULT
         set_argv('-L 1 spec/data')
         DumbDownViewer::Cli.execute
       end
+
+      it '-L 0 returns the root directory' do
+        expected_result = <<RESULT
+[spec/data]
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('-L 0 spec/data')
+        DumbDownViewer::Cli.execute
+      end
     end
   end
 end
