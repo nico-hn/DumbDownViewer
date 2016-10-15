@@ -160,5 +160,41 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '-L' do
+      it '-L 2 displays until the second level of directory tree' do
+        expected_result = <<RESULT
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     └─ [cannot_fly]
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('-L 2 spec/data')
+        DumbDownViewer::Cli.execute
+      end
+
+      it '-L 1 displays until the first level of directory tree' do
+        expected_result = <<RESULT
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+└─ [mammalia]
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('-L 1 spec/data')
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
