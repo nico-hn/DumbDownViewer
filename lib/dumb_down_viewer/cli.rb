@@ -85,25 +85,20 @@ YAML
 
     def self.execute
       options = parse_command_line_options
-      col_sep = options[:format] == :tsv ? "\t" : ','
       tree = DumbDownViewer.build_node_tree(ARGV[0])
       prune_dot_files(tree) unless options[:show_all]
       prune_dirs_with_more_than(tree, options[:file_limit]) if options[:file_limit]
       prune_level(tree, options[:level]) if options[:level]
       select_match(tree, options) if options[:match]
       ignore_match(tree, options) if options[:ignore_match]
-      node_format = options[:summary] ? add_summary(tree) : nil
       prune_files(tree) if options[:directories]
       print_json(tree, options) if options[:json]
       print_xml(tree, options) if options[:xml]
-      style = options[:style]
-      builder = TreeViewBuilder.create(tree)
-      formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
       open_output(options[:output]) do |out|
         result = if options[:file_limit] and tree.sub_nodes.empty?
                    ''
                  else
-                   formatter.format_table(builder.tree_table)
+                   format_tree_with_builder(tree, options)
                  end
         out.print result
       end
@@ -167,6 +162,15 @@ YAML
       visitor = DumbDownViewer::FileCountSummary.new
       tree.accept(visitor, nil)
       DumbDownViewer::FileCountSummary::NodeFormat.new
+    end
+
+    def self.format_tree_with_builder(tree, options)
+      style = options[:style]
+      col_sep = options[:format] == :tsv ? "\t" : ','
+      node_format = options[:summary] ? add_summary(tree) : nil
+      builder = TreeViewBuilder.create(tree)
+      formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
+      formatter.format_table(builder.tree_table)
     end
 
     def self.open_output(filename)
