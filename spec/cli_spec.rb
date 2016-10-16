@@ -1,6 +1,7 @@
 require "spec_helper"
 require "dumb_down_viewer"
 require "dumb_down_viewer/cli"
+require "stringio"
 
 describe DumbDownViewer do
   describe DumbDownViewer::Cli do
@@ -436,6 +437,75 @@ RESULT
         allow(STDOUT).to receive(:print).with(expected_result)
         set_argv("--summary spec/sample_dir")
         DumbDownViewer::Cli.execute
+      end
+    end
+
+    describe '--output' do
+      before do
+        @output_file_name = 'output_file'
+        @output_file_path = File.expand_path(@output_file_name)
+        @output_file = StringIO.new('', 'wb')
+      end
+
+      it 'without --ouput the result is printed out to STDOUT' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     ├─ [ghi]
+     │   └─ a.html
+     └─ [jkl]
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+
+      it 'with --ouput the result is printed out to specified file' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     ├─ [ghi]
+     │   └─ a.html
+     └─ [jkl]
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(DumbDownViewer::Cli).to receive(:open).with(@output_file_path, 'wb').and_yield(@output_file)
+        set_argv("--output=#{@output_file_name} spec/sample_dir")
+        DumbDownViewer::Cli.execute
+
+        expect(@output_file.string).to eq(expected_result)
+      end
+
+      it 'with --ouput the result is printed out to specified file -- with other options' do
+        expected_result = <<RESULT
+[spec/sample_dir],,,
+|-- ,[abc],,
+`-- ,[def],,
+,|-- ,[ghi],
+,|   ,`-- ,a.html
+,`-- ,[jkl],
+,,|-- ,alpha.png
+,,|-- ,alpha.txt
+,,|-- ,beta.jpg
+,,`-- ,beta.txt
+RESULT
+
+        allow(DumbDownViewer::Cli).to receive(:open).with(@output_file_path, 'wb').and_yield(@output_file)
+        set_argv("--output=#{@output_file_name} --style=ascii_art -f tree_csv spec/sample_dir")
+        DumbDownViewer::Cli.execute
+
+        expect(@output_file.string).to eq(expected_result)
       end
     end
 
