@@ -95,12 +95,7 @@ YAML
       print_json(tree, options) if options[:json]
       print_xml(tree, options) if options[:xml]
       open_output(options[:output]) do |out|
-        result = if options[:file_limit] and tree.sub_nodes.empty?
-                   ''
-                 else
-                   format_tree_with_builder(tree, options)
-                 end
-        out.print result
+        out.print format_tree(tree, options)
       end
     end
 
@@ -162,6 +157,14 @@ YAML
       visitor = DumbDownViewer::FileCountSummary.new
       tree.accept(visitor, nil)
       DumbDownViewer::FileCountSummary::NodeFormat.new
+    end
+
+    def self.format_tree(tree, options)
+      if options[:file_limit] and tree.sub_nodes.empty?
+        ''
+      else
+        format_tree_with_builder(tree, options)
+      end
     end
 
     def self.format_tree_with_builder(tree, options)
