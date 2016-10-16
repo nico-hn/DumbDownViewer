@@ -548,5 +548,26 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+    describe '--report-total-count' do
+      it '--report-total-count displays file/directory count at the end of result' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     ├─ [ghi]
+     │   └─ a.html
+     └─ [jkl]
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        allow(STDOUT).to receive(:puts).with("#{$/}4 directories, 5 files")
+        set_argv("--report-total-count spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end

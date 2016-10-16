@@ -57,6 +57,9 @@ json:
 xml:
   short: "-X"
   description: "Print out an XML representation"
+total_count:
+  long: "--report-total-count"
+  description: "Display file/directory count at the end of directory listing"
 YAML
 
     def self.parse_command_line_options
@@ -78,6 +81,7 @@ YAML
         opt.on(:summary) { options[:summary] = true }
         opt.on(:json) { options[:json] = true }
         opt.on(:xml) { options[:xml] = true }
+        opt.on(:total_count) { options[:total_count] = true }
         opt.parse!
       end
       options
@@ -94,6 +98,7 @@ YAML
       prune_files(tree) if options[:directories]
       open_output(options[:output]) do |out|
         out.print format_tree(tree, options)
+        out.puts total_count(tree) if options[:total_count]
       end
     end
 
@@ -169,6 +174,11 @@ YAML
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
       formatter.format_table(builder.tree_table)
+    end
+
+    def self.total_count(tree)
+      count = DumbDownViewer::TotalNodeCount.count(tree)
+      "#{$/}#{count[:directories]} directories, #{count[:files]} files"
     end
 
     def self.open_output(filename)
