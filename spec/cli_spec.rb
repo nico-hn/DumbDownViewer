@@ -341,5 +341,46 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '--all' do
+      it 'dot files are not displayed without --all' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     ├─ [ghi]
+     │   └─ a.html
+     └─ [jkl]
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+
+      it 'dot files are displayed with --all' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+│   └─ .dot_file
+└─ [def]
+     ├─ [ghi]
+     │   └─ a.html
+     └─ [jkl]
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("--all spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
