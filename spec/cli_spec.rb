@@ -382,5 +382,40 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '--filelimit' do
+      it '--filelimit 3 does not display directories that have more than 3 entries' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     └─ [ghi]
+          └─ a.html
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("--filelimit 3 spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+
+      it '--filelimit 4 directories that have less than 5 entries' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     ├─ [ghi]
+     │   └─ a.html
+     └─ [jkl]
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("--filelimit 4 spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
