@@ -248,5 +248,53 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '-I' do
+      it '-I does not display files whose name matchs a given pattern -- names contain "o"' do
+        expected_result = <<RESULT
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+│        ├─ penguin.jpg
+│        └─ penguin.txt
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     │   └─ bat.txt
+     └─ [cannot_fly]
+          └─ elephant.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('-I "o" spec/data')
+        DumbDownViewer::Cli.execute
+      end
+
+      it '-I does not display files whose name matchs a given pattern -- names end with ".txt"' do
+        expected_result = <<RESULT
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+│        ├─ ostrich.jpg
+│        └─ penguin.jpg
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     └─ [cannot_fly]
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("-I '\\.txt\\Z' spec/data")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
