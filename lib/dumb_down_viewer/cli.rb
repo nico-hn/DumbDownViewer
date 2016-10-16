@@ -92,7 +92,6 @@ YAML
       select_match(tree, options) if options[:match]
       ignore_match(tree, options) if options[:ignore_match]
       prune_files(tree) if options[:directories]
-      print_xml(tree, options) if options[:xml]
       open_output(options[:output]) do |out|
         out.print format_tree(tree, options)
       end
@@ -141,12 +140,8 @@ YAML
       json + $/
     end
 
-    def self.print_xml(tree, options)
-      xml = DumbDownViewer::XMLConverter.dump(tree)
-      open_output(options[:output]) do |out|
-        out.puts xml
-      end
-      exit
+    def self.format_xml(tree, options)
+      DumbDownViewer::XMLConverter.dump(tree)
     end
 
     def self.add_summary(tree)
@@ -160,6 +155,8 @@ YAML
         ''
       elsif options[:json]
         format_json(tree, options)
+      elsif options[:xml]
+        format_xml(tree, options)
       else
         format_tree_with_builder(tree, options)
       end

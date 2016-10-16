@@ -520,5 +520,33 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '-X' do
+      it '-X converts the format of output into XML' do
+        expected_result = <<RESULT
+<?xml version="1.0" encoding="UTF-8"?>
+<tree>
+  <directory name="sample_dir">
+    <directory name="abc"/>
+    <directory name="def">
+      <directory name="jkl">
+        <file name="alpha.png"></file>
+        <file name="beta.txt"></file>
+        <file name="alpha.txt"></file>
+        <file name="beta.jpg"></file>
+      </directory>
+      <directory name="ghi">
+        <file name="a.html"></file>
+      </directory>
+    </directory>
+  </directory>
+</tree>
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("-X spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
