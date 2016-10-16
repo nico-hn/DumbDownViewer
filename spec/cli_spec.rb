@@ -296,5 +296,50 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '--ignore-case' do
+      it '-P displays files whose name matchs a given pattern -- with --ignore-case' do
+        expected_result = <<RESULT
+[spec/data]
+├─ [aves]
+│   ├─ [can_fly]
+│   │   └─ sparrow.txt
+│   └─ [cannot_fly]
+│        ├─ ostrich.txt
+│        └─ penguin.txt
+└─ [mammalia]
+     ├─ [can_fly]
+     │   └─ bat.txt
+     └─ [cannot_fly]
+          └─ elephant.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("-P '\\.Txt\\Z' --ignore-case spec/data")
+        DumbDownViewer::Cli.execute
+      end
+
+      it '-I does not display files whose name matchs a given pattern -- with --ignore-case' do
+        expected_result = <<RESULT
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   └─ [cannot_fly]
+│        ├─ ostrich.jpg
+│        └─ penguin.jpg
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     └─ [cannot_fly]
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("-I '\\.Txt\\Z' --ignore-case spec/data")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
