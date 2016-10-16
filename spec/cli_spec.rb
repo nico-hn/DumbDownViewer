@@ -417,5 +417,26 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '--summary' do
+      it '--summary adds summary information after the directories that contain files' do
+        expected_result = <<RESULT
+[spec/sample_dir]
+├─ [abc]
+└─ [def]
+     ├─ [ghi] => html: 1 file
+     │   └─ a.html
+     └─ [jkl] => png: 1 file, txt: 2 files, jpg: 1 file
+          ├─ alpha.png
+          ├─ alpha.txt
+          ├─ beta.jpg
+          └─ beta.txt
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv("--summary spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
