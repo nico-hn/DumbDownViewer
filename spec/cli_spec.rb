@@ -438,5 +438,17 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '-J' do
+      it '-J converts the format of output into JSON' do
+        expected_result = <<RESULT
+{"type":"directory","name":"sample_dir","contents":[{"type":"directory","name":"abc","contents":[]},{"type":"directory","name":"def","contents":[{"type":"directory","name":"jkl","contents":[{"type":"file","name":"alpha.png"},{"type":"file","name":"beta.txt"},{"type":"file","name":"alpha.txt"},{"type":"file","name":"beta.jpg"}]},{"type":"directory","name":"ghi","contents":[{"type":"file","name":"a.html"}]}]}]}
+RESULT
+
+        allow(STDOUT).to receive(:puts).with(expected_result.chomp)
+        set_argv("-J spec/sample_dir")
+        DumbDownViewer::Cli.execute
+      end
+    end
   end
 end
