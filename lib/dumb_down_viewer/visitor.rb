@@ -198,4 +198,33 @@ module DumbDownViewer
       end
     end
   end
+
+  class TreeDuplicator < Visitor
+    def setup(tree, dest_root)
+      orig_root = File.join(tree.directory, tree.name)
+      @dest_root, @orig_root = [dest_root, orig_root].map do |root|
+        root.sub(/\/\Z/, '')
+      end
+      @orig_root_re = /\A#{Regexp.escape(@orig_root)}/
+    end
+
+    def visit_dir_node(node, memo)
+      dest_dir = replace_root(File.join(node.directory, node.name))
+      FileUtils.mkdir(File.expand_path(dest_dir))
+      visit_sub_nodes(node, memo)
+    end
+
+    def visit_file_node(node, memo)
+      orig_file = File.join(node.directory, node.name)
+      dest_file = replace_root(orig_file)
+      FileUtils.cp(File.expand_path(orig_file),
+                   File.expand_path(dest_file))
+    end
+
+    private
+
+    def replace_root(path)
+      path.sub(@orig_root_re, @dest_root)
+    end
+  end
 end
