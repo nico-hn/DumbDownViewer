@@ -275,6 +275,18 @@ RESULT
           FileUtils.remove_entry_secure('spec/tmp')
         end
       end
+
+      it 'fails if dest_root already exists' do
+        begin
+          FileUtils.mkdir('spec/tmp')
+          tree = DumbDownViewer.build_node_tree('spec/data')
+          expect do
+            DumbDownViewer::TreeDuplicator.duplicate(tree, 'spec/tmp')
+          end.to raise_error(DumbDownViewer::TreeDuplicator::DuplicationError)
+        ensure
+          FileUtils.remove_entry_secure('spec/tmp')
+        end
+      end
     end
   end
 end

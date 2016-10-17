@@ -200,6 +200,8 @@ module DumbDownViewer
   end
 
   class TreeDuplicator < Visitor
+    class DuplicationError < StandardError; end
+
     def self.duplicate(tree, dest_root)
       duplicator = new
       duplicator.setup(tree, dest_root)
@@ -216,6 +218,7 @@ module DumbDownViewer
 
     def visit_dir_node(node, memo)
       dest_dir = replace_root(File.join(node.directory, node.name))
+      check_entry_existence(dest_dir)
       FileUtils.mkdir(File.expand_path(dest_dir))
       visit_sub_nodes(node, memo)
     end
@@ -223,6 +226,7 @@ module DumbDownViewer
     def visit_file_node(node, memo)
       orig_file = File.join(node.directory, node.name)
       dest_file = replace_root(orig_file)
+      check_entry_existence(dest_file)
       FileUtils.cp(File.expand_path(orig_file),
                    File.expand_path(dest_file))
     end
@@ -231,6 +235,12 @@ module DumbDownViewer
 
     def replace_root(path)
       path.sub(@orig_root_re, @dest_root)
+    end
+
+    def check_entry_existence(entry)
+      if File.exist?(File.expand_path(entry))
+        raise DuplicationError, "#{entry} already exists: #{@orig_root} is not copied."
+      end
     end
   end
 end
