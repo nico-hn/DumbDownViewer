@@ -70,7 +70,7 @@ And you will get something like the following
          ├─ [can_fly]
          │   └─ bat.txt
          └─ [cannot_fly]
-         └─ elephant.txt
+               └─ elephant.txt
 
 ### Options
 
