@@ -54,23 +54,23 @@ Then type at the command line (or replace `spec/data` with a directory name whic
 And you will get something like the following
 
     [spec/data]
-    ¨§¨¡ README
-    ¨§¨¡ index.html
-    ¨§¨¡ [aves]
-    ¨¢   ¨§¨¡ index.html
-    ¨¢   ¨§¨¡ [can_fly]
-    ¨¢   ¨¢   ¨¦¨¡ sparrow.txt
-    ¨¢   ¨¦¨¡ [cannot_fly]
-    ¨¢        ¨§¨¡ ostrich.jpg
-    ¨¢        ¨§¨¡ ostrich.txt
-    ¨¢        ¨§¨¡ penguin.jpg
-    ¨¢        ¨¦¨¡ penguin.txt
-    ¨¦¨¡ [mammalia]
-         ¨§¨¡ index.html
-         ¨§¨¡ [can_fly]
-         ¨¢   ¨¦¨¡ bat.txt
-         ¨¦¨¡ [cannot_fly]
-         ¨¦¨¡ elephant.txt
+    â”œâ”€ README
+    â”œâ”€ index.html
+    â”œâ”€ [aves]
+    â”‚   â”œâ”€ index.html
+    â”‚   â”œâ”€ [can_fly]
+    â”‚   â”‚   â””â”€ sparrow.txt
+    â”‚   â””â”€ [cannot_fly]
+    â”‚        â”œâ”€ ostrich.jpg
+    â”‚        â”œâ”€ ostrich.txt
+    â”‚        â”œâ”€ penguin.jpg
+    â”‚        â””â”€ penguin.txt
+    â””â”€ [mammalia]
+         â”œâ”€ index.html
+         â”œâ”€ [can_fly]
+         â”‚   â””â”€ bat.txt
+         â””â”€ [cannot_fly]
+         â””â”€ elephant.txt
 
 ### Options
 
