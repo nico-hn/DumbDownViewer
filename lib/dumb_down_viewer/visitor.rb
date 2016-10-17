@@ -42,7 +42,7 @@ module DumbDownViewer
 
   class NodeFormat
     def initialize
-      @internal_encoding = Encoding.default_internal || 'UTF-8'
+      @internal_encoding = Encoding.default_internal || Encoding::UTF_8
     end
 
     def [](node)
@@ -55,11 +55,17 @@ module DumbDownViewer
     end
 
     def format_dir(node)
-      "[#{node.name}]".encode(@internal_encoding)
+      "[#{name(node)}]"
     end
 
     def format_file(node)
-      node.name.dup.encode(@internal_encoding)
+      name(node)
+    end
+
+    private
+
+    def name(node)
+      node.name.encode(@internal_encoding)
     end
   end
 
@@ -80,7 +86,7 @@ module DumbDownViewer
   class FileCountSummary < Visitor
     class NodeFormat < DumbDownViewer::NodeFormat
       def format_dir(node)
-        report = "[#{node.name}]".encode(@internal_encoding)
+        report = "[#{name(node)}]"
         data = node.summary
         counts = data.keys.map {|ext| file_count(data, ext) }.join(', ')
         report << " => #{counts}" unless counts.empty?
