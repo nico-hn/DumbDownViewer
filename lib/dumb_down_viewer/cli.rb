@@ -49,8 +49,8 @@ file_limit:
   long: "--filelimit [=number_of_files]"
   description: "Do not descend dirs with more than the specified number of files in them"
 summary:
-  long: "--summary"
-  description: "Add summary information about directories"
+  long: "--summary [=summary_type]"
+  description: "Add summary information about directories. Available summary_type: default"
 json:
   short: "-J"
   description: "Print out a JSON representation"
@@ -81,7 +81,7 @@ YAML
         opt.on(:ignore_case) { options[:ignore_case] = true }
         opt.on(:output) {|output_file| options[:output] = output_file }
         opt.on(:file_limit) {|number_of_files| options[:file_limit] = number_of_files.to_i }
-        opt.on(:summary) { options[:summary] = true }
+        opt.on(:summary) {|summary_type| options[:summary] = summary_type.to_sym }
         opt.on(:json) { options[:json] = true }
         opt.on(:xml) { options[:xml] = true }
         opt.on(:total_count) { options[:total_count] = true }
@@ -154,7 +154,10 @@ YAML
       DumbDownViewer::XMLConverter.dump(tree)
     end
 
-    def self.add_summary(tree)
+    def self.add_summary(tree, options)
+      if summary_type = options[:summary] and summary_type != :default
+        STDERR.puts "Unknown option #{summary_type} for --summary: default is used instead."
+      end
       visitor = DumbDownViewer::FileCountSummary.new
       tree.accept(visitor, nil)
       DumbDownViewer::FileCountSummary::NodeFormat.new
@@ -175,7 +178,7 @@ YAML
     def self.format_tree_with_builder(tree, options)
       style = options[:style]
       col_sep = options[:format] == :tsv ? "\t" : ','
-      node_format = options[:summary] ? add_summary(tree) : nil
+      node_format = options[:summary] ? add_summary(tree, options) : nil
       builder = TreeViewBuilder.create(tree)
       formatter = FORMATTER[options[:format]].new(style, col_sep, node_format)
       formatter.format_table(builder.tree_table)

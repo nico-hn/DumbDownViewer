@@ -435,7 +435,7 @@ RESULT
 RESULT
 
         allow(STDOUT).to receive(:print).with(expected_result)
-        set_argv("--summary spec/sample_dir")
+        set_argv("--summary default spec/sample_dir")
         DumbDownViewer::Cli.execute
       end
     end
