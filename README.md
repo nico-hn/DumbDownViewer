@@ -1,8 +1,10 @@
 # DumbDownViewer
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/dumb_down_viewer`. To experiment with that code, run `bin/console` for an interactive prompt.
+DumbDownViewer (ddv) is a recursive directory listing command with limited functionality.
 
-TODO: Delete this and the text above, and describe your gem
+In some case, you can use ddv like "[tree](http://mama.indstate.edu/users/ice/tree/)" command, even though these commands are not compatible:
+
+Several options of "tree" are missing in ddv, but there are also some options that are available only in ddv (such as --copy-to).
 
 ## Installation
 
@@ -22,7 +24,76 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Suppose you have a directory `spec/data`
+
+    $ find spec/data
+    spec/data
+    spec/data/README
+    spec/data/index.html
+    spec/data/mammalia
+    spec/data/mammalia/can_fly
+    spec/data/mammalia/can_fly/bat.txt
+    spec/data/mammalia/index.html
+    spec/data/mammalia/cannot_fly
+    spec/data/mammalia/cannot_fly/elephant.txt
+    spec/data/aves
+    spec/data/aves/can_fly
+    spec/data/aves/can_fly/sparrow.txt
+    spec/data/aves/index.html
+    spec/data/aves/cannot_fly
+    spec/data/aves/cannot_fly/penguin.jpg
+    spec/data/aves/cannot_fly/penguin.txt
+    spec/data/aves/cannot_fly/ostrich.txt
+    spec/data/aves/cannot_fly/ostrich.jpg
+
+
+Then type at the command line (or replace `spec/data` with a directory name which is on your system):
+
+    $ ddv spec/data
+
+And you will get something like the following
+
+    [spec/data]
+    изиб README
+    изиб index.html
+    изиб [aves]
+    ив   изиб index.html
+    ив   изиб [can_fly]
+    ив   ив   ижиб sparrow.txt
+    ив   ижиб [cannot_fly]
+    ив        изиб ostrich.jpg
+    ив        изиб ostrich.txt
+    ив        изиб penguin.jpg
+    ив        ижиб penguin.txt
+    ижиб [mammalia]
+         изиб index.html
+         изиб [can_fly]
+         ив   ижиб bat.txt
+         ижиб [cannot_fly]
+         ижиб elephant.txt
+
+### Options
+
+The following is a list of available options:
+
+|Short |Long |Description |
+|------|-----|------------|
+|-s [style_name] |--style [=style_name] |Choose the style of output other than default from ascii_art, list, zenkaku or tree |
+|-f [format_name] |--format [=format_name] |Choose the output format other than default from csv, tsv or tree_csv |
+|-d |--directories-only |List directories only |
+|-L [level] |- |Descend only level directories deep |
+|-P [pattern] |- |List only those files that match the given pattern |
+|-I [pattern] |- |Do not list files that match the given pattern |
+|-a |--all |Show all files including dot files |
+|- |--ignore-case |Ignore case when pattern matching |
+|-o [output_file] |--output [=output_file] |Output to file instead of stdout |
+|- |--filelimit [=number_of_files] |Do not descend dirs with more than the specified number of files in them |
+|- |--summary [=summary_type] |Add summary information about directories. Available summary_type: default |
+|-J |- |Print out a JSON representation |
+|-X |- |Print out an XML representation |
+|- |--report-total-count |Display file/directory count at the end of directory listing |
+|- |--copy-to [=dest_dir] |Copy the directory tree to dest_dir |
+
 
 ## Development
 
@@ -32,7 +103,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/dumb_down_viewer.
+Bug reports and pull requests are welcome on GitHub at https://github.com/nico-hn/DumbDownViewer.
 
 
 ## License
