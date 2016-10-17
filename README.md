@@ -74,7 +74,7 @@ And you will get something like the following
 
 ### Options
 
-The following is a list of available options:
+The following is the list of available options:
 
 |Short |Long |Description |
 |------|-----|------------|
