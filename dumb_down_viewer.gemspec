@@ -10,8 +10,13 @@ Gem::Specification.new do |spec|
   spec.email         = ["hashimoto.naoki@gmail.com"]
 
   spec.summary       = %q{DumbDownViewer (ddv) is a recursive directory listing command with limited functionality.}
-  # spec.description   = %q{TODO: Write a longer description or delete this line.}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.description   = <<-DESCRIPTION
+DumbDownViewer (ddv) is a recursive directory listing command with limited functionality.
+In some case, you can use ddv like "tree" command (http://mama.indstate.edu/users/ice/tree/),
+even though these commands are not compatible: Several options of "tree" are missing in ddv,
+but there are also some options that are available only in ddv (such as --copy-to).
+  DESCRIPTION
+  spec.homepage      = "https://github.com/nico-hn/DumbDownViewer"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org. To allow pushes either set the 'allowed_push_host'
