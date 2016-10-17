@@ -569,5 +569,44 @@ RESULT
         DumbDownViewer::Cli.execute
       end
     end
+
+    describe '--copy-to' do
+      it 'copies the directory tree to dest_dir' do
+        expected_result = <<RESULT
+[spec/data]
+├─ README
+├─ index.html
+├─ [aves]
+│   ├─ index.html
+│   ├─ [can_fly]
+│   │   └─ sparrow.txt
+│   └─ [cannot_fly]
+│        ├─ ostrich.jpg
+│        ├─ ostrich.txt
+│        ├─ penguin.jpg
+│        └─ penguin.txt
+└─ [mammalia]
+     ├─ index.html
+     ├─ [can_fly]
+     │   └─ bat.txt
+     └─ [cannot_fly]
+          └─ elephant.txt
+RESULT
+        expected_dest_tree = expected_result.sub(/spec\/data/, 'spec/tmp')
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('--copy-to spec/tmp spec/data')
+        begin
+          DumbDownViewer::Cli.execute
+
+          dup_tree = DumbDownViewer.build_node_tree('spec/tmp')
+          builder = DumbDownViewer::TreeViewBuilder.create(dup_tree)
+          result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(builder.tree_table)
+          expect(result).to eq(expected_dest_tree)
+        ensure
+          FileUtils.remove_entry_secure('spec/tmp')
+        end
+      end
+    end
   end
 end

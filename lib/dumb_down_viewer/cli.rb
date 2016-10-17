@@ -60,6 +60,9 @@ xml:
 total_count:
   long: "--report-total-count"
   description: "Display file/directory count at the end of directory listing"
+copy_to:
+  long: "--copy-to [=dest_dir]"
+  description: "Copy the directory tree to dest_dir"
 YAML
 
     def self.parse_command_line_options
@@ -82,6 +85,7 @@ YAML
         opt.on(:json) { options[:json] = true }
         opt.on(:xml) { options[:xml] = true }
         opt.on(:total_count) { options[:total_count] = true }
+        opt.on(:copy_to) {|dest_dir| options[:copy_to] = dest_dir }
         opt.parse!
       end
       options
@@ -96,6 +100,7 @@ YAML
       select_match(tree, options) if options[:match]
       ignore_match(tree, options) if options[:ignore_match]
       prune_files(tree) if options[:directories]
+      copy_to(tree, options) if options[:copy_to]
       open_output(options[:output]) do |out|
         out.print format_tree(tree, options)
         out.puts total_count(tree) if options[:total_count]
@@ -179,6 +184,10 @@ YAML
     def self.total_count(tree)
       count = DumbDownViewer::TotalNodeCount.count(tree)
       "#{$/}#{count[:directories]} directories, #{count[:files]} files"
+    end
+
+    def self.copy_to(tree, options)
+      DumbDownViewer::TreeDuplicator.duplicate(tree, options[:copy_to])
     end
 
     def self.open_output(filename)
