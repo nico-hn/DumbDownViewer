@@ -200,6 +200,12 @@ module DumbDownViewer
   end
 
   class TreeDuplicator < Visitor
+    def self.duplicate(tree, dest_root)
+      duplicator = new
+      duplicator.setup(tree, dest_root)
+      tree.accept(duplicator, nil)
+    end
+
     def setup(tree, dest_root)
       orig_root = File.join(tree.directory, tree.name)
       @dest_root, @orig_root = [dest_root, orig_root].map do |root|

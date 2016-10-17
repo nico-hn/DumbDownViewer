@@ -220,8 +220,8 @@ XML
     end
 
     describe DumbDownViewer::TreeDuplicator do
-      it 'duplicates a directory tree to a specified directory' do
-        expected_result = <<RESULT
+      before do
+        @expected_result = <<RESULT
 [spec/tmp]
 ├─ README
 ├─ index.html
@@ -242,6 +242,9 @@ XML
           └─ elephant.txt
 RESULT
 
+      end
+
+      it 'duplicates a directory tree to a specified directory' do
         tree = DumbDownViewer.build_node_tree('spec/data')
         duplicator = DumbDownViewer::TreeDuplicator.new
         duplicator.setup(tree, 'spec/tmp')
@@ -252,7 +255,22 @@ RESULT
           dup_tree = DumbDownViewer.build_node_tree('spec/tmp')
           builder = DumbDownViewer::TreeViewBuilder.create(dup_tree)
           result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(builder.tree_table)
-          expect(result).to eq(expected_result)
+          expect(result).to eq(@expected_result)
+        ensure
+          FileUtils.remove_entry_secure('spec/tmp')
+        end
+      end
+
+      it '.duplicate duplicates a directory tree to a specified directory' do
+        tree = DumbDownViewer.build_node_tree('spec/data')
+
+        begin
+          DumbDownViewer::TreeDuplicator.duplicate(tree, 'spec/tmp')
+
+          dup_tree = DumbDownViewer.build_node_tree('spec/tmp')
+          builder = DumbDownViewer::TreeViewBuilder.create(dup_tree)
+          result = DumbDownViewer::TreeViewBuilder::PlainTextFormat.new.format_table(builder.tree_table)
+          expect(result).to eq(@expected_result)
         ensure
           FileUtils.remove_entry_secure('spec/tmp')
         end
