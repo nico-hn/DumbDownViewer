@@ -2,7 +2,7 @@
 
 DumbDownViewer (ddv) is a recursive directory listing command with limited functionality.
 
-In some case, you can use ddv like "[tree](http://mama.indstate.edu/users/ice/tree/)" command, even though these commands are not compatible:
+In some cases, you can use ddv like "[tree](http://mama.indstate.edu/users/ice/tree/)" command, even though these commands are not compatible:
 
 Several options of "tree" are missing in ddv, but there are also some options that are available only in ddv (such as --copy-to).
 
