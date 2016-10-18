@@ -5,6 +5,15 @@ require "stringio"
 
 describe DumbDownViewer do
   describe DumbDownViewer::Cli do
+    describe 'without option' do
+      it 'returns the tree of current directory if no argument is given' do
+        allow(STDOUT).to receive(:print).with(/\A\[\.\/\.\]/)
+
+        set_argv('')
+        DumbDownViewer::Cli.execute
+      end
+    end
+
     describe '--style' do
       it '--style default' do
         expected_result = <<RESULT

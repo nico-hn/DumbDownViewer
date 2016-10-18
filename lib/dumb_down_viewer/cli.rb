@@ -93,7 +93,7 @@ YAML
 
     def self.execute
       options = parse_command_line_options
-      tree = DumbDownViewer.build_node_tree(ARGV[0])
+      tree = DumbDownViewer.build_node_tree(ARGV[0] || '.')
       prune_dot_files(tree) unless options[:show_all]
       prune_dirs_with_more_than(tree, options[:file_limit]) if options[:file_limit]
       prune_level(tree, options[:level]) if options[:level]
