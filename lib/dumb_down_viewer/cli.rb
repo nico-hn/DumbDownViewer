@@ -20,7 +20,7 @@ style:
 format:
   short: "-f [format_name]"
   long: "--format [=format_name]"
-  description: Choose the output format other than default from csv, tsv, tree_csv
+  description: Choose the output format other than default from csv, tsv, tree_csv, json
 directories:
   short: "-d"
   long: "--directories-only"
@@ -166,7 +166,7 @@ YAML
     def self.format_tree(tree, options)
       if options[:file_limit] and tree.sub_nodes.empty?
         ''
-      elsif options[:json]
+      elsif options[:json] or options[:format] == :json
         format_json(tree, options)
       elsif options[:xml]
         format_xml(tree, options)

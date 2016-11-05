@@ -151,6 +151,16 @@ RESULT
         set_argv('--format tree_csv spec/data')
         DumbDownViewer::Cli.execute
       end
+
+      it '--format json' do
+        expected_result = <<RESULT
+{"type":"directory","name":"data","contents":[{"type":"file","name":"README"},{"type":"file","name":"index.html"},{"type":"directory","name":"mammalia","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"bat.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"elephant.txt"}]}]},{"type":"directory","name":"aves","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"sparrow.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"penguin.jpg"},{"type":"file","name":"penguin.txt"},{"type":"file","name":"ostrich.txt"},{"type":"file","name":"ostrich.jpg"}]}]}]}
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('--format json spec/data')
+        DumbDownViewer::Cli.execute
+      end
     end
 
     describe '--directories-only' do
