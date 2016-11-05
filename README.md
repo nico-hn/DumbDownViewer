@@ -79,7 +79,7 @@ The following is the list of available options:
 |Short |Long |Description |
 |------|-----|------------|
 |-s [style_name] |--style [=style_name] |Choose the style of output other than default from ascii_art, list, zenkaku or tree |
-|-f [format_name] |--format [=format_name] |Choose the output format other than default from csv, tsv or tree_csv |
+|-f [format_name] |--format [=format_name] |Choose the output format other than default from csv, tsv, tree_csv, json or xml |
 |-d |--directories-only |List directories only |
 |-L [level] |- |Descend only level directories deep |
 |-P [pattern] |- |List only those files that match the given pattern |
