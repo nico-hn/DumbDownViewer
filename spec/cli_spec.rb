@@ -161,6 +161,43 @@ RESULT
         set_argv('--format json spec/data')
         DumbDownViewer::Cli.execute
       end
+
+      it '--format xml' do
+        expected_result = <<RESULT
+<?xml version="1.0" encoding="UTF-8"?>
+<tree>
+  <directory name="data">
+    <file name="README"></file>
+    <file name="index.html"></file>
+    <directory name="mammalia">
+      <file name="index.html"></file>
+      <directory name="can_fly">
+        <file name="bat.txt"></file>
+      </directory>
+      <directory name="cannot_fly">
+        <file name="elephant.txt"></file>
+      </directory>
+    </directory>
+    <directory name="aves">
+      <file name="index.html"></file>
+      <directory name="can_fly">
+        <file name="sparrow.txt"></file>
+      </directory>
+      <directory name="cannot_fly">
+        <file name="penguin.jpg"></file>
+        <file name="penguin.txt"></file>
+        <file name="ostrich.txt"></file>
+        <file name="ostrich.jpg"></file>
+      </directory>
+    </directory>
+  </directory>
+</tree>
+RESULT
+
+        allow(STDOUT).to receive(:print).with(expected_result)
+        set_argv('--format xml spec/data')
+        DumbDownViewer::Cli.execute
+      end
     end
 
     describe '--directories-only' do
