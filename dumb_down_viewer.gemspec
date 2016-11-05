@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
 DumbDownViewer (ddv) is a recursive directory listing command with limited functionality.
 In some cases, you can use ddv like "tree" command (http://mama.indstate.edu/users/ice/tree/),
 even though these commands are not compatible: Several options of "tree" are missing in ddv,
-but there are also some options that are available only in ddv (such as --copy-to).
+but there are some options that are available only in ddv (such as --copy-to) too.
   DESCRIPTION
   spec.homepage      = "https://github.com/nico-hn/DumbDownViewer"
   spec.license       = "MIT"
