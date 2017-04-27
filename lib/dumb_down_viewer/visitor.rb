@@ -41,10 +41,6 @@ module DumbDownViewer
   end
 
   class NodeFormat
-    def initialize
-      @internal_encoding = Encoding.default_internal || Encoding::UTF_8
-    end
-
     def [](node)
       case node
       when DumbDownViewer::DirNode
