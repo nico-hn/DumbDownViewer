@@ -5,6 +5,22 @@ describe DumbDownViewer do
     expect(DumbDownViewer::VERSION).not_to be nil
   end
 
+  it '.filesystem_encoding returns the same value as Encoding.find("locale")' do
+    begin
+      external = Encoding.default_external
+      internal = Encoding.default_internal
+      Encoding.default_external = 'ASCII-8BIT'
+      Encoding.default_internal = 'ASCII-8BIT'
+
+      filesystem_encoding = Encoding.find('locale')
+      expect(DumbDownViewer.filesystem_encoding).to eq(filesystem_encoding)
+    ensure
+      Encoding.default_external = external
+      Encoding.default_internal = internal
+    end
+  end
+
+
   it '.build_node_tree builds a tree of instances of DirNode and FileNode' do
     tree = DumbDownViewer.build_node_tree('spec/data')
     dirnames = tree.directories.map {|dir| dir.name }
