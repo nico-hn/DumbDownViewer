@@ -23,7 +23,7 @@ module DumbDownViewer
 
     def initialize(pwd, name, depth)
       @directory = pwd
-      @name = name
+      @name = name.encode(Encoding::UTF_8)
       @depth = depth
       @name_with_path = pwd.empty? ? @name : File.join(pwd, name)
       setup

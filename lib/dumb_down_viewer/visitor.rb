@@ -65,7 +65,7 @@ module DumbDownViewer
     private
 
     def name(node)
-      node.name.encode(@internal_encoding)
+      node.name
     end
   end
 
