@@ -55,16 +55,10 @@ module DumbDownViewer
     end
 
     def format_dir(node)
-      "[#{name(node)}]"
+      "[#{node.name}]"
     end
 
     def format_file(node)
-      name(node)
-    end
-
-    private
-
-    def name(node)
       node.name
     end
   end
@@ -86,7 +80,7 @@ module DumbDownViewer
   class FileCountSummary < Visitor
     class NodeFormat < DumbDownViewer::NodeFormat
       def format_dir(node)
-        report = "[#{name(node)}]"
+        report = "[#{node.name}]"
         data = node.summary
         counts = data.keys.map {|ext| file_count(data, ext) }.join(', ')
         report << " => #{counts}" unless counts.empty?
