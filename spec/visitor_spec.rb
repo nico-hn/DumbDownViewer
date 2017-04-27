@@ -26,27 +26,6 @@ describe DumbDownViewer do
       expect(image_files).to eq(%w(penguin.jpg ostrich.jpg))
     end
 
-    describe DumbDownViewer::NodeFormat do
-      it 'sets the encoding of returned string to that of filesystem' do
-        begin
-          external = Encoding.default_external
-          internal = Encoding.default_internal
-          Encoding.default_external = 'ASCII-8BIT'
-          Encoding.default_internal = 'ASCII-8BIT'
-
-          filesystem_encoding = Encoding.find('locale')
-          tree = DumbDownViewer.build_node_tree('spec/data_for_filesystem_test')
-          node_format = DumbDownViewer::NodeFormat.new
-          filename = node_format[tree.files[0]]
-          expect(filename.encoding).to eq(filesystem_encoding)
-          expect(filename).to eq('éléphant.txt')
-        ensure
-          Encoding.default_external = external
-          Encoding.default_internal = internal
-        end
-      end
-    end
-
     describe DumbDownViewer::FileCountSummary do
       it 'set #summary of each instance of DirNodes' do
         tree = DumbDownViewer.build_node_tree('spec/data')

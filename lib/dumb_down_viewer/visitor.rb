@@ -42,7 +42,7 @@ module DumbDownViewer
 
   class NodeFormat
     def initialize
-      @filesystem_encoding = DumbDownViewer.filesystem_encoding
+      @internal_encoding = Encoding.default_internal || Encoding::UTF_8
     end
 
     def [](node)
@@ -65,7 +65,7 @@ module DumbDownViewer
     private
 
     def name(node)
-      node.name.force_encoding(@filesystem_encoding)
+      node.name.encode(@internal_encoding)
     end
   end
 

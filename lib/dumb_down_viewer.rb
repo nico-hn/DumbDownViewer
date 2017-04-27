@@ -4,12 +4,6 @@ require 'find'
 require 'nokogiri'
 
 module DumbDownViewer
-  class << self
-    attr_reader :filesystem_encoding
-  end
-
-  @filesystem_encoding = Encoding.find('locale')
-
   def self.collect_directories_and_files(path)
     entries = Dir.entries(path) - ['.', '..']
     entries.partition do |entry|
