@@ -154,7 +154,7 @@ RESULT
 
       it '--format json' do
         expected_result = <<RESULT
-{"type":"directory","name":"data","contents":[{"type":"file","name":"README"},{"type":"file","name":"index.html"},{"type":"directory","name":"mammalia","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"bat.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"elephant.txt"}]}]},{"type":"directory","name":"aves","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"sparrow.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"penguin.jpg"},{"type":"file","name":"penguin.txt"},{"type":"file","name":"ostrich.txt"},{"type":"file","name":"ostrich.jpg"}]}]}]}
+{"type":"directory","name":"data","contents":[{"type":"file","name":"README"},{"type":"file","name":"index.html"},{"type":"directory","name":"aves","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"sparrow.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"ostrich.jpg"},{"type":"file","name":"ostrich.txt"},{"type":"file","name":"penguin.jpg"},{"type":"file","name":"penguin.txt"}]}]},{"type":"directory","name":"mammalia","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"bat.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"elephant.txt"}]}]}]}
 RESULT
 
         allow(STDOUT).to receive(:print).with(expected_result)
@@ -169,6 +169,18 @@ RESULT
   <directory name="data">
     <file name="README"></file>
     <file name="index.html"></file>
+    <directory name="aves">
+      <file name="index.html"></file>
+      <directory name="can_fly">
+        <file name="sparrow.txt"></file>
+      </directory>
+      <directory name="cannot_fly">
+        <file name="ostrich.jpg"></file>
+        <file name="ostrich.txt"></file>
+        <file name="penguin.jpg"></file>
+        <file name="penguin.txt"></file>
+      </directory>
+    </directory>
     <directory name="mammalia">
       <file name="index.html"></file>
       <directory name="can_fly">
@@ -176,18 +188,6 @@ RESULT
       </directory>
       <directory name="cannot_fly">
         <file name="elephant.txt"></file>
-      </directory>
-    </directory>
-    <directory name="aves">
-      <file name="index.html"></file>
-      <directory name="can_fly">
-        <file name="sparrow.txt"></file>
-      </directory>
-      <directory name="cannot_fly">
-        <file name="penguin.jpg"></file>
-        <file name="penguin.txt"></file>
-        <file name="ostrich.txt"></file>
-        <file name="ostrich.jpg"></file>
       </directory>
     </directory>
   </directory>
@@ -568,7 +568,7 @@ RESULT
     describe '-J' do
       it '-J converts the format of output into JSON' do
         expected_result = <<RESULT
-{"type":"directory","name":"sample_dir","contents":[{"type":"directory","name":"abc","contents":[]},{"type":"directory","name":"def","contents":[{"type":"directory","name":"jkl","contents":[{"type":"file","name":"alpha.png"},{"type":"file","name":"beta.txt"},{"type":"file","name":"alpha.txt"},{"type":"file","name":"beta.jpg"}]},{"type":"directory","name":"ghi","contents":[{"type":"file","name":"a.html"}]}]}]}
+{"type":"directory","name":"sample_dir","contents":[{"type":"directory","name":"abc","contents":[]},{"type":"directory","name":"def","contents":[{"type":"directory","name":"ghi","contents":[{"type":"file","name":"a.html"}]},{"type":"directory","name":"jkl","contents":[{"type":"file","name":"alpha.png"},{"type":"file","name":"alpha.txt"},{"type":"file","name":"beta.jpg"},{"type":"file","name":"beta.txt"}]}]}]}
 RESULT
 
         allow(STDOUT).to receive(:print).with(expected_result)
@@ -585,14 +585,14 @@ RESULT
   <directory name="sample_dir">
     <directory name="abc"/>
     <directory name="def">
-      <directory name="jkl">
-        <file name="alpha.png"></file>
-        <file name="beta.txt"></file>
-        <file name="alpha.txt"></file>
-        <file name="beta.jpg"></file>
-      </directory>
       <directory name="ghi">
         <file name="a.html"></file>
+      </directory>
+      <directory name="jkl">
+        <file name="alpha.png"></file>
+        <file name="alpha.txt"></file>
+        <file name="beta.jpg"></file>
+        <file name="beta.txt"></file>
       </directory>
     </directory>
   </directory>

@@ -26,7 +26,7 @@ describe DumbDownViewer do
     dirnames = tree.directories.map {|dir| dir.name }
     filenames = tree.files.map {|file| file.name }
     sub_dirnames = tree.directories[0].directories.map {|dir| dir.name }
-    expect(dirnames).to eq(%w(mammalia aves))
+    expect(dirnames).to eq(%w(aves mammalia))
     expect(filenames).to eq(%w(README index.html))
     expect(sub_dirnames).to eq(%w(can_fly cannot_fly))
   end

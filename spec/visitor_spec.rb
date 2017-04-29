@@ -23,7 +23,7 @@ describe DumbDownViewer do
       tree.accept(image_file_collector, nil)
 
       expect(tree_depth).to eq(3)
-      expect(image_files).to eq(%w(penguin.jpg ostrich.jpg))
+      expect(image_files).to eq(%w(ostrich.jpg penguin.jpg))
     end
 
     describe DumbDownViewer::FileCountSummary do
@@ -45,7 +45,7 @@ describe DumbDownViewer do
         tree.accept(visitor, nil)
         node_format = DumbDownViewer::FileCountSummary::NodeFormat.new
         expect(node_format[tree]).to eq('[data] => (misc): 1 file, html: 1 file')
-        expect(node_format[tree.directories[1].directories[1]]).to eq('[cannot_fly] => jpg: 2 files, txt: 2 files')
+        expect(node_format[tree.directories[0].directories[1]]).to eq('[cannot_fly] => jpg: 2 files, txt: 2 files')
       end
 
       it 'NodeFormat#[] does not add summary information if there is no file in a directory' do
@@ -68,7 +68,7 @@ describe DumbDownViewer do
 
     describe DumbDownViewer::JSONConverter do
       it 'converts a given directory tree into a JSON representation' do
-        expected_json = '{"type":"directory","name":"data","contents":[{"type":"file","name":"README"},{"type":"file","name":"index.html"},{"type":"directory","name":"mammalia","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"bat.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"elephant.txt"}]}]},{"type":"directory","name":"aves","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"sparrow.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"penguin.jpg"},{"type":"file","name":"penguin.txt"},{"type":"file","name":"ostrich.txt"},{"type":"file","name":"ostrich.jpg"}]}]}]}'
+        expected_json = '{"type":"directory","name":"data","contents":[{"type":"file","name":"README"},{"type":"file","name":"index.html"},{"type":"directory","name":"aves","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"sparrow.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"ostrich.jpg"},{"type":"file","name":"ostrich.txt"},{"type":"file","name":"penguin.jpg"},{"type":"file","name":"penguin.txt"}]}]},{"type":"directory","name":"mammalia","contents":[{"type":"file","name":"index.html"},{"type":"directory","name":"can_fly","contents":[{"type":"file","name":"bat.txt"}]},{"type":"directory","name":"cannot_fly","contents":[{"type":"file","name":"elephant.txt"}]}]}]}'
 
         tree = DumbDownViewer.build_node_tree('spec/data')
         json = DumbDownViewer::JSONConverter.dump(tree)
@@ -77,7 +77,7 @@ describe DumbDownViewer do
       end
 
       it 'appends path to the value of "name" field, when the second argument of #dump is true' do
-        expected_json = '{"type":"directory","name":"spec/data","contents":[{"type":"file","name":"spec/data/README"},{"type":"file","name":"spec/data/index.html"},{"type":"directory","name":"spec/data/mammalia","contents":[{"type":"file","name":"spec/data/mammalia/index.html"},{"type":"directory","name":"spec/data/mammalia/can_fly","contents":[{"type":"file","name":"spec/data/mammalia/can_fly/bat.txt"}]},{"type":"directory","name":"spec/data/mammalia/cannot_fly","contents":[{"type":"file","name":"spec/data/mammalia/cannot_fly/elephant.txt"}]}]},{"type":"directory","name":"spec/data/aves","contents":[{"type":"file","name":"spec/data/aves/index.html"},{"type":"directory","name":"spec/data/aves/can_fly","contents":[{"type":"file","name":"spec/data/aves/can_fly/sparrow.txt"}]},{"type":"directory","name":"spec/data/aves/cannot_fly","contents":[{"type":"file","name":"spec/data/aves/cannot_fly/penguin.jpg"},{"type":"file","name":"spec/data/aves/cannot_fly/penguin.txt"},{"type":"file","name":"spec/data/aves/cannot_fly/ostrich.txt"},{"type":"file","name":"spec/data/aves/cannot_fly/ostrich.jpg"}]}]}]}'
+        expected_json = '{"type":"directory","name":"spec/data","contents":[{"type":"file","name":"spec/data/README"},{"type":"file","name":"spec/data/index.html"},{"type":"directory","name":"spec/data/aves","contents":[{"type":"file","name":"spec/data/aves/index.html"},{"type":"directory","name":"spec/data/aves/can_fly","contents":[{"type":"file","name":"spec/data/aves/can_fly/sparrow.txt"}]},{"type":"directory","name":"spec/data/aves/cannot_fly","contents":[{"type":"file","name":"spec/data/aves/cannot_fly/ostrich.jpg"},{"type":"file","name":"spec/data/aves/cannot_fly/ostrich.txt"},{"type":"file","name":"spec/data/aves/cannot_fly/penguin.jpg"},{"type":"file","name":"spec/data/aves/cannot_fly/penguin.txt"}]}]},{"type":"directory","name":"spec/data/mammalia","contents":[{"type":"file","name":"spec/data/mammalia/index.html"},{"type":"directory","name":"spec/data/mammalia/can_fly","contents":[{"type":"file","name":"spec/data/mammalia/can_fly/bat.txt"}]},{"type":"directory","name":"spec/data/mammalia/cannot_fly","contents":[{"type":"file","name":"spec/data/mammalia/cannot_fly/elephant.txt"}]}]}]}'
 
         tree = DumbDownViewer.build_node_tree('spec/data')
         json = DumbDownViewer::JSONConverter.dump(tree, true)
@@ -107,6 +107,18 @@ DOC
 <directory name="data">
   <file name="README"> </file>
   <file name="index.html"> </file>
+  <directory name="aves">
+    <file name="index.html"> </file>
+    <directory name="can_fly">
+      <file name="sparrow.txt"> </file>
+    </directory>
+    <directory name="cannot_fly">
+      <file name="ostrich.jpg"> </file>
+      <file name="ostrich.txt"> </file>
+      <file name="penguin.jpg"> </file>
+      <file name="penguin.txt"> </file>
+    </directory>
+  </directory>
   <directory name="mammalia">
     <file name="index.html"> </file>
     <directory name="can_fly">
@@ -114,18 +126,6 @@ DOC
     </directory>
     <directory name="cannot_fly">
       <file name="elephant.txt"> </file>
-    </directory>
-  </directory>
-  <directory name="aves">
-    <file name="index.html"> </file>
-    <directory name="can_fly">
-      <file name="sparrow.txt"> </file>
-    </directory>
-    <directory name="cannot_fly">
-      <file name="penguin.jpg"> </file>
-      <file name="penguin.txt"> </file>
-      <file name="ostrich.txt"> </file>
-      <file name="ostrich.jpg"> </file>
     </directory>
   </directory>
 </directory>
@@ -147,6 +147,18 @@ XML
   <directory name="data">
     <file name="README"></file>
     <file name="index.html"></file>
+    <directory name="aves">
+      <file name="index.html"></file>
+      <directory name="can_fly">
+        <file name="sparrow.txt"></file>
+      </directory>
+      <directory name="cannot_fly">
+        <file name="ostrich.jpg"></file>
+        <file name="ostrich.txt"></file>
+        <file name="penguin.jpg"></file>
+        <file name="penguin.txt"></file>
+      </directory>
+    </directory>
     <directory name="mammalia">
       <file name="index.html"></file>
       <directory name="can_fly">
@@ -154,18 +166,6 @@ XML
       </directory>
       <directory name="cannot_fly">
         <file name="elephant.txt"></file>
-      </directory>
-    </directory>
-    <directory name="aves">
-      <file name="index.html"></file>
-      <directory name="can_fly">
-        <file name="sparrow.txt"></file>
-      </directory>
-      <directory name="cannot_fly">
-        <file name="penguin.jpg"></file>
-        <file name="penguin.txt"></file>
-        <file name="ostrich.txt"></file>
-        <file name="ostrich.jpg"></file>
       </directory>
     </directory>
   </directory>
@@ -186,6 +186,18 @@ XML
   <directory name="spec/data">
     <file name="spec/data/README"></file>
     <file name="spec/data/index.html"></file>
+    <directory name="spec/data/aves">
+      <file name="spec/data/aves/index.html"></file>
+      <directory name="spec/data/aves/can_fly">
+        <file name="spec/data/aves/can_fly/sparrow.txt"></file>
+      </directory>
+      <directory name="spec/data/aves/cannot_fly">
+        <file name="spec/data/aves/cannot_fly/ostrich.jpg"></file>
+        <file name="spec/data/aves/cannot_fly/ostrich.txt"></file>
+        <file name="spec/data/aves/cannot_fly/penguin.jpg"></file>
+        <file name="spec/data/aves/cannot_fly/penguin.txt"></file>
+      </directory>
+    </directory>
     <directory name="spec/data/mammalia">
       <file name="spec/data/mammalia/index.html"></file>
       <directory name="spec/data/mammalia/can_fly">
@@ -193,18 +205,6 @@ XML
       </directory>
       <directory name="spec/data/mammalia/cannot_fly">
         <file name="spec/data/mammalia/cannot_fly/elephant.txt"></file>
-      </directory>
-    </directory>
-    <directory name="spec/data/aves">
-      <file name="spec/data/aves/index.html"></file>
-      <directory name="spec/data/aves/can_fly">
-        <file name="spec/data/aves/can_fly/sparrow.txt"></file>
-      </directory>
-      <directory name="spec/data/aves/cannot_fly">
-        <file name="spec/data/aves/cannot_fly/penguin.jpg"></file>
-        <file name="spec/data/aves/cannot_fly/penguin.txt"></file>
-        <file name="spec/data/aves/cannot_fly/ostrich.txt"></file>
-        <file name="spec/data/aves/cannot_fly/ostrich.jpg"></file>
       </directory>
     </directory>
   </directory>

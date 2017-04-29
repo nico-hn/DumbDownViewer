@@ -72,6 +72,7 @@ module DumbDownViewer
 
     def entry_nodes(nodes, node_class, depth)
       nodes.map {|node| node_class.new(@name_with_path, node, depth) }
+        .sort_by {|node| node.name }
     end
   end
 
